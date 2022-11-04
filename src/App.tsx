@@ -1,9 +1,17 @@
 import React from 'react';
+import {
+	BrowserRouter as Router,
+	Route,
+	Link,
+	Routes
+} from 'react-router-dom';
 
 function App() {
-  return (
-	<div className="App"></div>
-  );
+	return (
+		<Router>
+			<div className="App"></div>
+		</Router>
+	);
 }
 
 export default App;

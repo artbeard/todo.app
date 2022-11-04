@@ -1,17 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<link href="%PUBLIC_URL%/assets/css/vendor.min.css" rel="stylesheet"/>
+    <link href="%PUBLIC_URL%/assets/css/app.min.css" rel="stylesheet"/>
+
 	<link rel="icon" href="%PUBLIC_URL%/assets/favicon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta
-	  name="description"
-	  content="Web site created using create-react-app"
-	/>
+	<meta name="theme-color" content="#000000" />
+	<meta name="description" content="Web site created using create-react-app"/>
+	<!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
+	
+	<!--
+	  manifest.json provides metadata used when your web app is installed on a
+	  user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+	-->
 	<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 	<title>React App</title>
-</head>
-<body>
-	<div id="root"></div>
-</body>
+	
+  </head>
+  <body>
+	<div id="app" class="app app-boxed-layout   ">
+		<!-- app-sidebar-collapsed - скрыть левое меню -->
+		<!-- app-sidebar-mobile-toggled - открыть меню в мобильной версии -->
+	
+		<div id="header" class="app-header">
+	
+			<div class="desktop-toggler">
+				<button type="button" class="menu-toggler">
+					<span class="bar"></span>
+					<span class="bar"></span>
+					<span class="bar"></span>
+				</button>
+			</div>
+			<div class="mobile-toggler">
+				<button type="button" class="menu-toggler">
+					<span class="bar"></span>
+					<span class="bar"></span>
+					<span class="bar"></span>
+				</button>
+			</div>
+	
+			<div class="brand">
+				<a href="/" class="brand-logo">
+					<span class="brand-img">
+						<span class="brand-img-text text-theme">TD</span>
+					</span>
+					<span class="brand-text">TO-DO List</span>
+				</a>
+			</div>
+
+			<div class="menu"></div>
+		</div>
+	
+	
+		<div id="sidebar" class="app-sidebar">
+	
+			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+	
+				<div class="menu">
+					<div class="menu-header">Navigation</div>
+					<div class="menu-item">
+						<a href="index.html" class="menu-link">
+							<span class="menu-icon"><i class="bi bi-cpu"></i></span>
+							<span class="menu-text">Dashboard</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="/todo/" class="menu-link">
+							<span class="menu-icon"><i class="bi bi-bar-chart"></i></span>
+							<span class="menu-text">Мои списки</span>
+						</a>
+					</div>
+					<div class="menu-item has-sub ">
+						<!-- expand - открыть submenu -->
+						<!-- menu-submenu display:block -->
+						<a href="layout_boxed_layout.html#" class="menu-link">
+							<span class="menu-icon">
+							<i class="bi bi-envelope"></i>
+							</span>
+							<span class="menu-text">Email</span>
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="email_inbox.html" class="menu-link">
+									<span class="menu-text">Inbox</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="email_compose.html" class="menu-link">
+									<span class="menu-text">Compose</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="email_detail.html" class="menu-link">
+									<span class="menu-text">Detail</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+	
+				<!-- <div class="p-3 px-4 mt-auto">
+					<a href="#" target="_blank" class="btn d-block btn-outline-theme">
+						<i class="fa fa-code-branch me-2 ms-n2 opacity-5"></i> Documentation
+					</a>
+				</div> -->
+			</div>
+	
+		</div>
+	
+		<button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
+	
+		<div id="content" class="app-content">
+
+			<!-- <div class="d-flex align-items-center mb-md-3 mb-2">
+				<div class="flex-fill">
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item"><a href="/">Главная</a></li>
+						<li class="breadcrumb-item active">Набор задач</li>
+					</ul>
+					<h1 class="page-header mb-0">Набор задач <small>список списков!!!</small></h1>
+				</div>
+				<div class="ms-auto">
+					<a href="#" data-bs-toggle="modal" class="btn btn-outline-theme"><i class="fa fa-plus-circle me-1"></i> Add Task</a>
+				</div>
+			</div> -->
+
+			<div id="root"></div>
+
+		</div>
+	
+		<a href="#" data-toggle="scroll-to-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const wrapper = document.getElementById('app');
+			document.querySelector('.desktop-toggler .menu-toggler').addEventListener('click', () => {
+				if (wrapper.classList.contains('app-sidebar-collapsed'))
+				{
+					wrapper.classList.remove('app-sidebar-collapsed');
+					wrapper.classList.add('app-sidebar-toggled');
+				}
+				else
+				{
+					wrapper.classList.add('app-sidebar-collapsed');
+					wrapper.classList.remove('app-sidebar-toggled');
+				}
+			});
+
+			document.querySelector('.mobile-toggler .menu-toggler').addEventListener('click', (e) => {
+				e.stopPropagation();
+				wrapper.classList.add('app-sidebar-mobile-toggled');
+				document.body.addEventListener('click', () => {
+					wrapper.classList.remove('app-sidebar-mobile-toggled');
+				}, {once: true});
+			});
+		})
+	</script>
+  </body>
 </html>
