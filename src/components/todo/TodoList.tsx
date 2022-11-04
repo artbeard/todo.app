@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import { IToDoList } from '../../models';
 import TodoProgress from './TodoProgress'
+import TodoItem from './TodoItem';
 
+//import Store from '../../store/Store';
+import { observer } from "mobx-react-lite";
 
 interface TodoListProps{
     todoList: IToDoList
@@ -47,19 +50,20 @@ function TodoList({todoList}: TodoListProps)
 				</div>
 				<div className="form-group mb-1">
 					<div className="collapse show">
-						{/* {
+						{
 							todoList.items
 							//	.sort((a, b) => {return  a.position - b.position })
 								.map((item)=>{
 								return (
-									<CheckListItem item={item} toDoListID={todoList.id} key={`CheckListItem${item.id}`} />
+									<TodoItem item={item} todoListID={todoList.id} key={`TodoListItem_${todoList.id}_${item.id}`} />
 								)
 							}) 
-						} */}
+						}
 					</div>
 				</div>
 			</div>
 		</div>
     )
 }
-export default TodoList;
+
+export default observer(TodoList);

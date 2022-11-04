@@ -1,5 +1,31 @@
 import { Link } from 'react-router-dom';
+import { useParams } from "react-router-dom";
+import { IToDoList } from '../models';
+import Store from '../store/Store';
+
 function Editor() {
+    const params = useParams();
+    let TodoListId: number|null = parseInt(String(params.id));
+    let TodoList: IToDoList;
+
+    if (isNaN(TodoListId) || TodoListId === 0)
+    {
+        TodoListId = null;
+        TodoList = {
+            id: null,
+            title: 'Новый cписок',
+            userId: null,
+            isActive: true,
+            items: []
+        }
+    }
+    else
+    {
+        TodoList = Store.getTodoListById(TodoListId)
+    }
+
+     
+
 	return (
 		<>
             <div className="d-flex align-items-center mb-md-3 mb-2">
@@ -7,9 +33,9 @@ function Editor() {
 					<ul className="breadcrumb">
 						<li className="breadcrumb-item"><a href="/">Главная</a></li>
                         <li className="breadcrumb-item"><Link to="/todo/">Мои задачи</Link></li>
-						<li className="breadcrumb-item active">Задача 1</li>
+						<li className="breadcrumb-item active">{TodoList.title}</li>
 					</ul>
-					<h1 className="page-header mb-0">Задача 1</h1>
+					<h1 className="page-header mb-0">{TodoList.title}</h1>
 				</div>
 				<div className="ms-auto">
                     <button
@@ -22,7 +48,7 @@ function Editor() {
 					</button>
 				</div>
 			</div>
-            
+
         </>
 	);
 }

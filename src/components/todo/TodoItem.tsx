@@ -1,8 +1,10 @@
 import {IToDo} from '../../models'
+import Store from '../../store/Store'
+import { observer } from "mobx-react-lite";
 
 interface ITodoItemProps{
     item: IToDo,
-    todoListID: number
+    todoListID: number|null
 }
 
 function TodoItem({item, todoListID}: ITodoItemProps)
@@ -13,6 +15,8 @@ function TodoItem({item, todoListID}: ITodoItemProps)
                 checked={item.complited}
                 onChange={(e)=>{
                     //TodoManager.changeComplited(item.id, e.target.checked, toDoListID)
+                    //Store.getTodoListById(todoListID).items.find((el:IToDo) => {return el.id === item.id}).complited = e.target.checked;
+                    Store.setComplited(item, e.target.checked);
                 }}
                 className="form-check-input"
                 id={`item_${item.id}`} />
@@ -21,4 +25,4 @@ function TodoItem({item, todoListID}: ITodoItemProps)
     )
 }
 
-export default TodoItem;
+export default observer(TodoItem);

@@ -1,5 +1,12 @@
 import { Link } from 'react-router-dom';
+import Card from '../components/card/Card'
+import TodoList from '../components/todo/TodoList';
+import Store from '../store/Store';
+import { observer } from "mobx-react-lite";
+
+
 function Board() {
+
 	return (
 		<>
             <div className="d-flex align-items-center mb-md-3 mb-2">
@@ -17,15 +24,30 @@ function Board() {
 				</div>
 			</div>
             <div className="mb-md-4 mb-3 d-md-flex">
-				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-list me-1 text-theme"></i> 5 Списоков</div>
-				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-check me-1 text-theme"></i> 2 Выполненных</div>
+				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-list me-1 text-theme"></i> {Store.countTodoList} Списоков</div>
+				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-check me-1 text-theme"></i> {Store.countTodoListComplited} Выполненных</div>
 				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-code-branch me-1 text-theme"></i> 3 Отслеживаемых</div>
 			</div>
             <div className="row">
-                Карточки со списками
+                {
+                    Store.countTodoList === 0 && <div className='col-12'>
+                        Нет данных для отображения
+                    </div>
+                }
+                {
+                    Store.todoList.map((list, index) => {
+                        return (
+                            <div className='col-12 col-md-6' key={`card_wrap_${index}`}>
+                                <Card header={list.title}>
+                                    <TodoList todoList={list} />
+                                </Card>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </>
 	);
 }
 
-export default Board;
+export default observer(Board);
