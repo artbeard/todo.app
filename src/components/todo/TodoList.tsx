@@ -12,12 +12,12 @@ interface TodoListProps{
 
 function TodoList({todoList}: TodoListProps)
 {
-    let complitedCount = todoList.items.filter(el => el.complited === true).length;
+    let completedCount = todoList.items.filter(el => el.completed === true).length;
 	let totalCount = todoList.items.length;
     return (
         <div className="list-group-item d-flex px-3">
 			<div className="me-3 pt-1">
-				<i className={'fa-fw fa-lg ' + (complitedCount === totalCount 
+				<i className={'fa-fw fa-lg ' + (completedCount === totalCount 
 					? 'far fa-check-circle text-success'
 					: 'fas fa-tasks text-default'
 					)}></i>
@@ -35,16 +35,16 @@ function TodoList({todoList}: TodoListProps)
 				<hr className="my-3" />
 				<div className="d-flex align-items-center mb-2">
 					<div className="fw-400 me-2">
-						Задачи ({totalCount}/{complitedCount})
+						Задачи ({totalCount}/{completedCount})
 					</div>
 					<div>
 						<Link to={`/todo/edit/${todoList.id}`} className="text-white text-opacity-50 text-decoration-none">
 							<i className="fa fa-plus-circle"></i> Добавить
 						</Link>
 					</div>
-					<TodoProgress complited={
+					<TodoProgress completed={
 						totalCount > 0
-							? Math.round(complitedCount * 100 / totalCount)
+							? Math.round(completedCount * 100 / totalCount)
 							: 0
 						} />
 				</div>

@@ -2,7 +2,7 @@ export interface IToDo{
     id: number,
     content: string,
     position: number,
-    complited: boolean
+    completed: boolean
 }
 
 export interface IToDoList{
@@ -17,7 +17,7 @@ export interface IToDoCreate{
     id: null,
     content: string,
     position: number,
-    complited: boolean
+    completed: boolean
 }
 
 export interface IToDoListCreate{

@@ -32,10 +32,10 @@ class Store{
     }
 
     //Количество Выполненных списков
-    get countTodoListComplited(): number
+    get countTodoListCompleted(): number
     {
         return this.todoList.reduce((acc, elem) => {
-            if (elem.items.filter(itemEl => itemEl.complited).length === elem.items.length)
+            if (elem.items.filter(itemEl => itemEl.completed).length === elem.items.length)
             {
                 return acc + 1;
             }
@@ -49,10 +49,15 @@ class Store{
         return this.todoList.find(el => el.id === id)
     }
 
-    //Изменить Complited у переданного todo
-    setComplited(item: IToDo, complited: boolean)
+    //Изменить completed у переданного todo
+    async setCompleted(item: IToDo, completed: boolean)
     {
-        item.complited = complited;
+        new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                item.completed = completed;
+                resolve(true);
+            }, 1500 );
+        })
     }
     
 }

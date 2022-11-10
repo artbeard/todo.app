@@ -25,7 +25,7 @@ function Board() {
 			</div>
             <div className="mb-md-4 mb-3 d-md-flex">
 				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-list me-1 text-theme"></i> {Store.countTodoList} Списоков</div>
-				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-check me-1 text-theme"></i> {Store.countTodoListComplited} Выполненных</div>
+				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-check me-1 text-theme"></i> {Store.countTodoListCompleted} Выполненных</div>
 				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-code-branch me-1 text-theme"></i> 3 Отслеживаемых</div>
 			</div>
             <div className="row">
