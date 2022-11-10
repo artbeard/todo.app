@@ -1,0 +1,11 @@
+.todoItem .actionTodoItemButtons{
+    visibility: hidden;
+    right: 0;
+    top: 0;
+}
+.actionTodoItemButtons i{
+    cursor: pointer;
+}
+.todoItem:hover .actionTodoItemButtons{
+    visibility: visible;
+}
