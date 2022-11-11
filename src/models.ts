@@ -8,7 +8,7 @@ export interface IToDo{
 export interface IToDoList{
     id: number|null,
     title: string,
-    userId: string|null,
+    userId: number|null,
     isActive: boolean,
     items: IToDo[]
 }
