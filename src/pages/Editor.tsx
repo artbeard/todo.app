@@ -13,12 +13,12 @@ function Editor() {
     
 	let TodoList: IToDoList;
 
-	if (isNaN(TodoListId) || TodoListId === 0)
+	if (!TodoListId)
 	{
 		TodoListId = null;
 		TodoList = {
 			id: null,
-			title: 'Новый cписок',
+			title: 'Новый cписок 11',
 			userId: null,
 			isActive: true,
 			items: []
@@ -29,6 +29,8 @@ function Editor() {
 		TodoList = Store.getTodoListById(TodoListId)
 	}
 
+    console.log(TodoList, TodoListId, !!TodoListId);
+
 	return (
 		<>
 			<div className="d-flex align-items-center mb-md-3 mb-2">
@@ -36,9 +38,9 @@ function Editor() {
 					<ul className="breadcrumb">
 						<li className="breadcrumb-item"><a href="/">Главная</a></li>
 						<li className="breadcrumb-item"><Link to="/todo/">Мои задачи</Link></li>
-						<li className="breadcrumb-item active">{TodoList.title}</li>
+						<li className="breadcrumb-item active">{TodoList.title ?? ''}</li>
 					</ul>
-					<h1 className="page-header mb-0">{TodoList.title}</h1>
+					<h1 className="page-header mb-0">{TodoList.title ?? ''}</h1>
 				</div>
 				<div className="ms-auto">
 					<button
