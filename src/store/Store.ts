@@ -44,18 +44,57 @@ class Store{
     }
 
     //Поиск списка по id
-    getTodoListById(id: number): any //IToDoList
+    getTodoListById(id: number | null): any //IToDoList
     {
         return this.todoList.find(el => el.id === id)
+    }
+    addTodoList(newList: IToDoList)
+    {
+        this.todoList.push(newList);
+        // this.todoList = [
+        //     ...this.todoList,
+        //     newList
+        // ];
     }
 
     //Изменить completed у переданного todo
     async setCompleted(item: IToDo, completed: boolean)
     {
         new Promise((resolve, reject) => {
-            setTimeout(()=>{
+            //setTimeout(()=>{
                 item.completed = completed;
                 resolve(true);
+            //}, 1500 );
+        })
+    }
+
+    async removeTodo(item: IToDo, listId: number | null)
+    {
+        let List = this.getTodoListById(listId);
+        List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
+        new Promise((resolve, reject) => {
+            //setTimeout(()=>{
+                //item;
+                resolve(item);
+            //}, 1500 );
+        })
+    }
+
+    async createNewList(title: string):Promise<IToDoList>
+    {
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                let newEl:IToDoList = {
+                    id: 533,
+                    title: title,
+                    userId: 133,
+                    isActive: true,
+                    items: []
+                };
+                this.addTodoList(newEl);
+                resolve(
+                    this.getTodoListById(newEl.id)
+                );
             }, 1500 );
         })
     }
