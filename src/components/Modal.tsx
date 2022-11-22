@@ -11,7 +11,7 @@ function Modal({header, children, onCancel, onOk}: IModalProps)
 {
     return (
         <>
-        <div className="modal _modal-cover fade show d-block">
+        <div className="modal modal-cover fade show d-block">
             <div className="modal-dialog  modal-lg">
                 <div className="modal-content border">
                     <div className="modal-header">
