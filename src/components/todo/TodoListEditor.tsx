@@ -9,7 +9,8 @@ import Modal from '../Modal';
 import Store from '../../store/Store';
 import { observer } from "mobx-react-lite";
 
-import { IToDoList, IToDoCreate, IToDo } from '../../models'
+//import { IToDoList, IToDoCreate, IToDo } from '../../models'
+import { IToDoList, IToDo } from '../../models'
 
 interface TodoListEditorProps{
 	todoListId: number | null
@@ -17,10 +18,6 @@ interface TodoListEditorProps{
 
 function TodoListEditor({todoListId}: TodoListEditorProps)
 {
-	//console.log('todoListId', todoListId);
-	const [itemContent, setItemContent] = useState(''); //Deprecated
-
-
     /**
      * Собственно, список дел
      */
@@ -105,25 +102,6 @@ function TodoListEditor({todoListId}: TodoListEditorProps)
                 console.log(err);
 			})
     }
-
-
-	//удалить
-	const addNewItem = function()
-	{
-		if (itemContent == '')
-		{
-			console.log('Пустое значение itemContent:', itemContent);
-			return;
-		}
-		console.log('Добавляем', itemContent);
-		setAddItemModal(false);
-	}
-
-	
-
-	
-
-	//console.log(todoList);
 
 	let completedCount = todoList.items.filter((el) => el?.completed === true).length;
 	let totalCount = todoList.items.length;
