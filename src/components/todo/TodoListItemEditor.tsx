@@ -5,10 +5,11 @@ import Store from '../../store/Store';
 
 interface ITodoItemProps{
 	todoItem: IToDo,
-	todoListId: number | null
+	todoListId: number | null,
+	changeItem: Function
 }
 
-function TodoListItemEditor({todoItem, todoListId}: ITodoItemProps)
+function TodoListItemEditor({todoItem, todoListId, changeItem}: ITodoItemProps)
 {
 	return (
 		<>
@@ -22,7 +23,9 @@ function TodoListItemEditor({todoItem, todoListId}: ITodoItemProps)
 					htmlFor={`item_id${todoItem.id}`}>{todoItem.content}</label>
 			</div>
 			<DropDown>
-				<button className="btn btn-sm btn-link btn-outline dropdown-item">Редактировать</button>
+				<button className="btn btn-sm btn-link btn-outline dropdown-item"
+					onClick={() => {changeItem(todoItem)} }
+                    >Редактировать</button>
 				<button className="btn btn-sm btn-link btn-outline dropdown-item"
 					onClick={() => {Store.removeTodo(todoItem, todoListId)}}
 					>Удалить</button>
