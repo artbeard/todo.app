@@ -68,6 +68,11 @@ class Store{
         })
     }
 
+    /**
+     * Удаление элемента из списка дел
+     * @param item 
+     * @param listId 
+     */
     async removeTodo(item: IToDo, listId: number | null)
     {
         let List = this.getTodoListById(listId);
@@ -80,6 +85,11 @@ class Store{
         })
     }
 
+    /**
+     * создание нового списка дел
+     * @param title 
+     * @returns 
+     */
     async createNewList(title: string):Promise<IToDoList>
     {
         return new Promise((resolve, reject) => {
@@ -94,6 +104,32 @@ class Store{
                 this.addTodoList(newEl);
                 resolve(
                     this.getTodoListById(newEl.id)
+                );
+            }, 1500 );
+        })
+    }
+
+    /**
+     * Создание новго пункта в списке
+     * @param item 
+     * @returns 
+     */
+    async createNewItem(item: IToDo)//:Promise<IToDoList>
+    {
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                // let newEl:IToDoList = {
+                //     id: 533,
+                //     title: title,
+                //     userId: 133,
+                //     isActive: true,
+                //     items: []
+                // };
+                // this.addTodoList(newEl);
+                console.log(item);
+                resolve(
+                    1
+                    //this.getTodoListById(newEl.id)
                 );
             }, 1500 );
         })
