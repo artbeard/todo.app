@@ -9,8 +9,21 @@ import { IToDoList } from '../models';
 
 function Board() {
 
+	/**
+	 * Отображение окна создяния нового списка
+	 */
 	const [createModal, setCreateModal] = useState(false);
-	const [newListTitle, setNewListTitle] = useState('');
+	/**
+	 * Анимация запроса к серверу
+	 */
+	 const [processing, setProcessing] = useState(false);
+
+	/**
+	 * Содержит Заголовок и id списка
+	 */
+	const [newListTitle, setNewListTitle] = useState({id: null, title: ''});
+	const [errorListTitle, setErrorListTitle] = useState('');
+	
 	let navigate = useNavigate();
 
 	/**
@@ -18,7 +31,8 @@ function Board() {
 	 */
 	function createNewList()
 	{
-		setNewListTitle(`Новый список # ${Store.countTodoList + 1}`);
+		setErrorListTitle('');
+		setNewListTitle(prev => ({title: `Новый список # ${Store.countTodoList + 1}`, id: null}));
 		setCreateModal(true);
 	}
 	/**
@@ -26,25 +40,28 @@ function Board() {
 	 */
 	function okPressed()
 	{
-		if (newListTitle !== '')
+		if (newListTitle.title !== '')
 		{
-			Store.createNewList(newListTitle)
+			setProcessing(true);
+			setErrorListTitle(''); //убираем ошибку
+			Store.createNewList(newListTitle.title)
 				.then((res: IToDoList)=>{
+					setProcessing(false);
 					console.log('Обратились к серверу для создания нового списка', res)
 					setCreateModal(false);
 					//Редирект на редактор=
 					navigate(`/todo/edit/${res.id}`);
-					setNewListTitle('');
+					setNewListTitle({id: null, title: ''});
 				})
 				.catch(err => {
+					setProcessing(false);
 					setCreateModal(false);
-					setNewListTitle('');
+					setNewListTitle({id: null, title: ''});
 				})
 		}
 		else
 		{
-			//Вывод ошибки
-			console.log('Заголовок списка не может быть пустым');
+			setErrorListTitle('Название списка не может быть пустым');
 		}
 	}
 	return (
@@ -90,16 +107,19 @@ function Board() {
 				createModal &&
 				<Modal header='Создать новый список'
 					onOk={okPressed}
+					processing={processing}
 					onCancel={()=>{setCreateModal(false)}}>
 					<form className="row"
 						onSubmit={(e) => {e.preventDefault(); okPressed();}}
 						>
 						<div className="form-group mb-3">
 							<label className="form-label">Введите название списка</label>
-							<input type="text" className="form-control"
-								value={newListTitle}
-								onChange={(e) => {setNewListTitle(e.target.value)}}
+							<input type="text"
+								className={'form-control' + (errorListTitle !== '' ? ' is-invalid' : '')}
+								value={newListTitle.title}
+								onChange={(e) => {setNewListTitle(prev => ({...prev, title: e.target.value}))}}
 								/>
+								{errorListTitle && <div className="invalid-feedback">{errorListTitle}</div>}
 						</div>
 					</form>
 				</Modal>
