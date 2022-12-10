@@ -4,10 +4,11 @@ interface IModalProps{
     header?: string,
     children?: ReactNode|string,
     onOk?: Function,
-    onCancel?: Function
+    onCancel?: Function,
+    processing?: boolean
 }
 
-function Modal({header, children, onCancel, onOk}: IModalProps)
+function Modal({header, children, onCancel, onOk, processing = false}: IModalProps)
 {
     return (
         <>
@@ -22,9 +23,16 @@ function Modal({header, children, onCancel, onOk}: IModalProps)
                     </div>
                     <div className="modal-footer">
                         {onCancel &&
-                            <button type="button" className="btn btn-default" onClick={(e:MouseEvent)=>{onCancel(e)}}>Cancel</button>}
+                            <button type="button" className="btn btn-default" onClick={(e:MouseEvent)=>{onCancel(e)}} disabled={processing}>Cancel</button>}
                         {onOk &&
-                            <button type="button" className="btn btn-outline-theme" onClick={(e:MouseEvent)=>{onOk(e)}}>Ok</button>}    
+                            <button type="button" className="btn btn-outline-theme" onClick={(e:MouseEvent)=>{onOk(e)}} disabled={processing}>
+                                {processing && 
+                                    <>
+                                    <span className="spinner-border spinner-border-sm"></span>
+                                    <span className="visually-hidden">Loading...</span>
+                                    </>}
+                                Ok
+                            </button>}    
                     </div>
                 </div>
             </div>
