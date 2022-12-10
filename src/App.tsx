@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState} from 'react';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -10,16 +10,24 @@ import Editor from './pages/Editor'
 import Store from './store/Store';
 
 function App() {
-
-    Store.init();
+    //TODO Добавить анимацию загрузки приложения
+    const [storeInit, setStoreInit] = useState(false);
+    Store.init()
+        .then(()=>{
+            setStoreInit(true);
+        });
 	return (
-		<Router>
-			<Routes>
+        <>
+        {storeInit &&
+            <Router>
+            <Routes>
 				<Route path="/todo/" element={<Board />} />
 				<Route path="/todo/create" element={<Editor />} />
 				<Route path="/todo/edit/:id" element={<Editor />} />
 			</Routes>
 		</Router>
+        }
+		</>
 	);
 }
 

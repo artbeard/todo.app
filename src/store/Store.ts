@@ -12,11 +12,13 @@ class Store{
 
     async init()
     {
-        await fetch('/data/store.js')
+        return await fetch('/data/store.js')
             .then(response => response.json())
             .then((data:IToDoList[]) => {
-                this.todoList = data;
-                this.setTodoList(data);
+                runInAction(()=>{
+                    this.todoList = data;
+                    this.setTodoList(data);
+                })
             });
     }
 
