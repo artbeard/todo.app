@@ -39,10 +39,10 @@ function TodoList({todoList}: TodoListProps)
 					</div>
 					<div>
 						<Link to={`/todo/edit/${todoList.id}`} className="text-white text-opacity-50 text-decoration-none">
-							<i className="fa fa-plus-circle"></i> Добавить
+							<i className="far fa-edit"></i> Редактировать
 						</Link>
 					</div>
-					<TodoProgress completed={
+                    <TodoProgress completed={
 						totalCount > 0
 							? Math.round(completedCount * 100 / totalCount)
 							: 0
