@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {runInAction, makeAutoObservable} from 'mobx'
 import {IToDo, IToDoList} from '../models'
 
 class Store{
@@ -57,34 +57,6 @@ class Store{
         // ];
     }
 
-    //Изменить completed у переданного todo
-    async setCompleted(item: IToDo, completed: boolean)
-    {
-        new Promise((resolve, reject) => {
-            //setTimeout(()=>{
-                item.completed = completed;
-                resolve(true);
-            //}, 1500 );
-        })
-    }
-
-    /**
-     * Удаление элемента из списка дел
-     * @param item 
-     * @param listId 
-     */
-    async removeTodo(item: IToDo, listId: number | null)
-    {
-        let List = this.getTodoListById(listId);
-        List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
-        new Promise((resolve, reject) => {
-            //setTimeout(()=>{
-                //item;
-                resolve(item);
-            //}, 1500 );
-        })
-    }
-
     /**
      * создание нового списка дел
      * @param title 
@@ -109,29 +81,73 @@ class Store{
         })
     }
 
+    // insertItem(item: IToDo, todoList: IToDoList) {
+    //     todoList.items.push(item)
+    // }
+
     /**
      * Создание новго пункта в списке
      * @param item 
      * @returns 
      */
-    async createNewItem(item: IToDo)//:Promise<IToDoList>
+    async createNewTodoItem(item: IToDo, todoId: number)//:Promise<IToDoList>
     {
         return new Promise((resolve, reject) => {
             setTimeout(()=>{
-                // let newEl:IToDoList = {
-                //     id: 533,
-                //     title: title,
-                //     userId: 133,
-                //     isActive: true,
-                //     items: []
-                // };
-                // this.addTodoList(newEl);
-                console.log(item);
-                resolve(
-                    1
-                    //this.getTodoListById(newEl.id)
-                );
+                item.id = Math.round(Math.random()*1000);
+                let todo = this.getTodoListById(todoId);
+                item.position = todo.items.reduce((acc: number, item: IToDo) => Math.max(acc, item.position), 0) + 10;
+                runInAction(()=>{
+                    todo.items.push(item)
+                });
+                resolve(item);
             }, 1500 );
+        })
+    }
+
+    async updateTodoItem(item: IToDo, todoId: number)//:Promise<IToDoList>
+    {
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                let todo = this.getTodoListById(todoId);
+                let index = todo.items.findIndex((el: IToDo) => el.id === item.id);
+                runInAction(()=>{
+                    todo.items[index] = item;
+                });
+                resolve(true);
+            }, 1500 );
+        })
+    }
+
+    /**
+     * Изменить completed у переданного todo
+     * @param item 
+     * @param completed 
+     */
+    async setCompleted(item: IToDo, completed: boolean)
+    {
+        new Promise((resolve, reject) => {
+            //setTimeout(()=>{
+                item.completed = completed;
+                resolve(true);
+            //}, 1500 );
+        })
+    }
+
+    /**
+     * Удаление элемента из списка дел
+     * @param item 
+     * @param listId 
+     */
+    async removeTodo(item: IToDo, listId: number | null)
+    {
+        let List = this.getTodoListById(listId);
+        List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
+        new Promise((resolve, reject) => {
+            //setTimeout(()=>{
+                //item;
+                resolve(item);
+            //}, 1500 );
         })
     }
     
