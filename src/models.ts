@@ -1,5 +1,5 @@
 export interface IToDo{
-    id: number,
+    id: number|null,
     content: string,
     position: number,
     completed: boolean
