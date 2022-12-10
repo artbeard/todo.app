@@ -18,7 +18,7 @@ function Editor() {
 		TodoListId = null;
 		TodoList = {
 			id: null,
-			title: 'Новый cписок 11',
+			title: 'Новый cписок',
 			userId: null,
 			isActive: true,
 			items: []
