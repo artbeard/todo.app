@@ -31,7 +31,7 @@ function TodoListItemEditor({todoItem, todoListId, changeItem}: ITodoItemProps)
 					onClick={() => {changeItem(todoItem)} }
                     >Редактировать</button>
 				<button className="btn btn-sm btn-link btn-outline dropdown-item"
-					onClick={() => {Store.removeTodo(todoItem, todoListId)}}
+					onClick={() => {Store.removeTodoItem(todoItem, todoListId)}}
 					>Удалить</button>
 			</DropDown>
 		</>

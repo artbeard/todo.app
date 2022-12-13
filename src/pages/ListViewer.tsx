@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
-import { IToDoList } from '../models';
-import Store from '../store/Store';
 import { observer } from "mobx-react-lite";
+import Store from '../store/Store';
 import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
-
+import { IToDoList } from '../models';
 /**
  * Страница Просмотр содержимого списка
  * @returns JSX
@@ -19,7 +18,7 @@ function ListViewer() {
      */
     let TodoListId: number|null = parseInt(String(params.id));
     
-	let TodoList: IToDoList = Store.getTodoListById(TodoListId);
+	let TodoList: IToDoList = Store.getTodoListById(TodoListId) as IToDoList;
 
     useEffect(() => {
         //Редиректим на страницу ошибки, если требуемый список не найден

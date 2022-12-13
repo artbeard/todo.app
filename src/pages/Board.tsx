@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import Store from '../store/Store';
 import Card from '../components/card/Card'
 import TodoList from '../components/todo/TodoList';
 import Modal from '../components/Modal'
-import Store from '../store/Store';
 import { IToDoList } from '../models';
 
 /**

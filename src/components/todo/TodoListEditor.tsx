@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-//import { Link } from 'react-router-dom'
-//import { IToDoList } from '../../models';
+import { observer } from "mobx-react-lite";
 import TodoProgress from './TodoProgress'
-//import TodoItem from './TodoItem';
 import TodoListItemEditor from './TodoListItemEditor';
 import Modal from '../Modal';
-
 import Store from '../../store/Store';
-import { observer } from "mobx-react-lite";
-
-//import { IToDoList, IToDoCreate, IToDo } from '../../models'
 import { IToDoList, IToDo } from '../../models'
 
 interface ITodoListEditorProps{
@@ -30,7 +24,7 @@ function TodoListEditor({todoListId}: ITodoListEditorProps)
 	/**
 	 * Собственно, список дел
 	 */
-	let todoList: IToDoList = Store.getTodoListById(todoListId);
+	let todoList: IToDoList = Store.getTodoListById(todoListId) as IToDoList;
 	/**
 	 * Выполнено пунктов
 	 */

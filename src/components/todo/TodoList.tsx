@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom'
-import { IToDoList } from '../../models';
+import { observer } from "mobx-react-lite";
 import TodoProgress from './TodoProgress'
 import TodoItem from './TodoItem';
-
-import { observer } from "mobx-react-lite";
+import { IToDoList } from '../../models';
 
 interface ITodoListProps{
 	todoList: IToDoList
