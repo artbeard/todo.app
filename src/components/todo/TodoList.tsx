@@ -3,23 +3,28 @@ import { IToDoList } from '../../models';
 import TodoProgress from './TodoProgress'
 import TodoItem from './TodoItem';
 
-//import Store from '../../store/Store';
 import { observer } from "mobx-react-lite";
 
 interface ITodoListProps{
-    todoList: IToDoList
+	todoList: IToDoList
 }
 /**
  * Карточка отображения списка дел на доске
  * @param ITodoListProps
- * @returns 
+ * @returns JSX
  */
 function TodoList({todoList}: ITodoListProps)
 {
-    let completedCount = todoList.items.filter(el => el.completed === true).length;
+	/**
+	 * Количество выполненных пунктов
+	 */
+	let completedCount = todoList.items.filter(el => el.completed === true).length;
+	/**
+	 * Количество пунктов всего
+	 */
 	let totalCount = todoList.items.length;
-    return (
-        <div className="list-group-item d-flex px-3 py-3">
+	return (
+		<div className="list-group-item d-flex px-3 py-3">
 			<div className="me-3 pt-1">
 				<i className={'fa-fw fa-lg ' + (completedCount === totalCount 
 					? 'far fa-check-circle text-success'
@@ -27,11 +32,6 @@ function TodoList({todoList}: ITodoListProps)
 					)}></i>
 			</div>
 			<div className="flex-fill">
-				{/* <div className="fw-400 mb-2 mt-1">
-					{todoList.title}
-				</div> */}
-				{/* <div className="small text-white text-opacity-50 mb-2">#29930 closed yesterday by Sean</div> */}
-				{/* <hr className="my-3" /> */}
 				<div className="d-flex align-items-center mb-2 mt-1">
 					<div className="fw-400 me-2">
 						Задачи ({totalCount}/{completedCount})
@@ -41,15 +41,13 @@ function TodoList({todoList}: ITodoListProps)
 							<i className="far fa-edit"></i> Редактировать
 						</Link>
 					</div>
-                    <TodoProgress completed={
+					<TodoProgress completed={
 						totalCount > 0
 							? Math.round(completedCount * 100 / totalCount)
 							: 0
 						} />
 				</div>
-                
-                <hr className="my-3" />
-
+				<hr className="my-3" />
 				<div className="form-group mb-1">
 					<div className="collapse show">
 						{
@@ -64,7 +62,7 @@ function TodoList({todoList}: ITodoListProps)
 				</div>
 			</div>
 		</div>
-    )
+	)
 }
 
 export default observer(TodoList);
