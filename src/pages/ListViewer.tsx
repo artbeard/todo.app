@@ -5,8 +5,11 @@ import Store from '../store/Store';
 
 import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
-
-function Editor() {
+/**
+ * Просмотр содержимого списка
+ * @returns JSX
+ */
+function ListViewer() {
 	const params = useParams();
 	let TodoListId: number|null = parseInt(String(params.id));
     //TodoListId = isNaN(TodoListId) ? null : TodoListId;
@@ -64,4 +67,4 @@ function Editor() {
 	);
 }
 
-export default Editor;
+export default ListViewer;
