@@ -83,6 +83,27 @@ class Store{
         })
     }
 
+    async removeList(id: number): Promise<boolean>
+    {
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                runInAction(()=>{
+                    let index = this.todoList.findIndex(el => el.id === id);
+                    if (index > -1)
+                    {
+                        this.todoList.splice(index, 1);
+                        resolve(true);
+                    }
+                    else
+                    {
+                        reject(false);
+                    }
+                });
+                
+            }, 1500 );
+        })
+    }
+
     // insertItem(item: IToDo, todoList: IToDoList) {
     //     todoList.items.push(item)
     // }
