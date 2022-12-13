@@ -6,7 +6,7 @@ import {
 	Routes
 } from 'react-router-dom';
 import Board from './pages/Board'
-import Editor from './pages/Editor'
+import ListViewer from './pages/ListViewer'
 import Store from './store/Store';
 
 function App() {
@@ -18,12 +18,22 @@ function App() {
         });
 	return (
         <>
+        {!storeInit && 
+            <div className='col-12 py-5'>
+                <div className="text-center">
+                    <div className="spinner-border"></div>
+                    <div>
+                        Загрузка...
+                    </div>
+                </div>				
+			</div>
+		}
         {storeInit &&
             <Router>
             <Routes>
 				<Route path="/todo/" element={<Board />} />
-				<Route path="/todo/create" element={<Editor />} />
-				<Route path="/todo/edit/:id" element={<Editor />} />
+				<Route path="/todo/create" element={<ListViewer />} />
+				<Route path="/todo/edit/:id" element={<ListViewer />} />
 			</Routes>
 		</Router>
         }
