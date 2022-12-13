@@ -8,7 +8,11 @@ interface ITodoItemProps{
 	todoListId: number | null,
 	changeItem: Function
 }
-
+/**
+ * Отображает один пункт из списка дел и позволяет удалить/редактировать
+ * @param ITodoItemProps 
+ * @returns 
+ */
 function TodoListItemEditor({todoItem, todoListId, changeItem}: ITodoItemProps)
 {
 	return (
