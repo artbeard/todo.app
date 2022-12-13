@@ -6,7 +6,7 @@ import Store from '../store/Store';
 import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
 /**
- * Просмотр содержимого списка
+ * Страница Просмотр содержимого списка
  * @returns JSX
  */
 function ListViewer() {
