@@ -8,7 +8,7 @@ import Store from '../store/Store';
 import { IToDoList } from '../models';
 
 /**
- * Компонент отрисовки доски со списками
+ * Страница Компонент отрисовки доски со списками
  * @returns JSX
  */
 function Board() {
@@ -53,7 +53,6 @@ function Board() {
 			setErrorListTitle(''); //убираем ошибку
 			Store.createNewList(newList.title)
 				.then((res: IToDoList)=>{
-					console.log('Обратились к серверу для создания нового списка', res)
 					//Редирект на редактор=
 					navigate(`/todo/edit/${res.id}`);
 				})
@@ -90,11 +89,12 @@ function Board() {
 			<div className="mb-md-4 mb-3 d-md-flex">
 				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-list me-1 text-theme"></i> {Store.countTodoList} Списоков</div>
 				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-check me-1 text-theme"></i> {Store.countTodoListCompleted} Выполненных</div>
-				<div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-code-branch me-1 text-theme"></i> 3 Отслеживаемых</div>
+				{/* <div className="ms-md-4 mt-md-0 mt-2"><i className="fa fa-code-branch me-1 text-theme"></i> 3 Отслеживаемых</div> */}
 			</div>
 			<div className="row">
 				{
-					Store.countTodoList === 0 && <div className='col-12'>
+					Store.countTodoList === 0 &&
+                    <div className='col-12'>
 						Нет данных для отображения
 					</div>
 				}
