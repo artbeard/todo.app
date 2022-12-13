@@ -32,8 +32,6 @@ function ListViewer() {
 		TodoList = Store.getTodoListById(TodoListId)
 	}
 
-    console.log(TodoList, TodoListId, !!TodoListId);
-
 	return (
 		<>
 			<div className="d-flex align-items-center mb-md-3 mb-2">
