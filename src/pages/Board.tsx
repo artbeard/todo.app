@@ -7,6 +7,10 @@ import Modal from '../components/Modal'
 import Store from '../store/Store';
 import { IToDoList } from '../models';
 
+/**
+ * Компонент отрисовки доски со списками
+ * @returns JSX
+ */
 function Board() {
 
 	/**
@@ -21,7 +25,10 @@ function Board() {
 	/**
 	 * Содержит Заголовок и id списка
 	 */
-	const [newListTitle, setNewListTitle] = useState({id: null, title: ''});
+	const [newList, setNewList] = useState({id: null, title: ''});
+	/**
+	 * Ошибка добавления/редактирования списка
+	 */
 	const [errorListTitle, setErrorListTitle] = useState('');
 	
 	let navigate = useNavigate();
@@ -32,7 +39,7 @@ function Board() {
 	function createNewList()
 	{
 		setErrorListTitle('');
-		setNewListTitle(prev => ({title: `Новый список # ${Store.countTodoList + 1}`, id: null}));
+		setNewList(prev => ({title: `Новый список # ${Store.countTodoList + 1}`, id: null}));
 		setCreateModal(true);
 	}
 	/**
@@ -40,23 +47,23 @@ function Board() {
 	 */
 	function okPressed()
 	{
-		if (newListTitle.title !== '')
+		if (newList.title !== '')
 		{
 			setProcessing(true);
 			setErrorListTitle(''); //убираем ошибку
-			Store.createNewList(newListTitle.title)
+			Store.createNewList(newList.title)
 				.then((res: IToDoList)=>{
-					setProcessing(false);
 					console.log('Обратились к серверу для создания нового списка', res)
-					setCreateModal(false);
 					//Редирект на редактор=
 					navigate(`/todo/edit/${res.id}`);
-					setNewListTitle({id: null, title: ''});
 				})
 				.catch(err => {
+					//Показать уведомление			
+				})
+				.finally(()=>{
 					setProcessing(false);
 					setCreateModal(false);
-					setNewListTitle({id: null, title: ''});
+					setNewList({id: null, title: ''});
 				})
 		}
 		else
@@ -116,8 +123,8 @@ function Board() {
 							<label className="form-label">Введите название списка</label>
 							<input type="text"
 								className={'form-control' + (errorListTitle !== '' ? ' is-invalid' : '')}
-								value={newListTitle.title}
-								onChange={(e) => {setNewListTitle(prev => ({...prev, title: e.target.value}))}}
+								value={newList.title}
+								onChange={(e) => {setNewList(prev => ({...prev, title: e.target.value}))}}
 								/>
 								{errorListTitle && <div className="invalid-feedback">{errorListTitle}</div>}
 						</div>
