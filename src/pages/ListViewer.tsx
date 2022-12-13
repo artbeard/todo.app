@@ -1,37 +1,34 @@
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { IToDoList } from '../models';
 import Store from '../store/Store';
 import { observer } from "mobx-react-lite";
 import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
+
 /**
  * Страница Просмотр содержимого списка
  * @returns JSX
  */
 function ListViewer() {
 	const params = useParams();
-	let TodoListId: number|null = parseInt(String(params.id));
-    //TodoListId = isNaN(TodoListId) ? null : TodoListId;
+    const navigate = useNavigate();
+	/**
+     * Id списка дел, получаем из роута
+     */
+    let TodoListId: number|null = parseInt(String(params.id));
     
-	let TodoList: IToDoList;
+	let TodoList: IToDoList = Store.getTodoListById(TodoListId);
 
-	if (!TodoListId)
-	{
-		TodoListId = null;
-		TodoList = {
-			id: null,
-			title: 'Новый cписок',
-			userId: null,
-			isActive: true,
-			items: []
-		}
-	}
-	else
-	{
-		TodoList = Store.getTodoListById(TodoListId)
-	}
-
+    useEffect(() => {
+        //Редиректим на страницу ошибки, если требуемый список не найден
+        if (!TodoList)
+        {
+            navigate(`/todo/error/404`);
+        }
+    })
+    
 	return (
 		<>
 			<div className="d-flex align-items-center mb-md-3 mb-2">
@@ -39,9 +36,9 @@ function ListViewer() {
 					<ul className="breadcrumb">
 						<li className="breadcrumb-item"><a href="/">Главная</a></li>
 						<li className="breadcrumb-item"><Link to="/todo/">Мои задачи</Link></li>
-						<li className="breadcrumb-item active">{TodoList.title ?? ''}</li>
+						<li className="breadcrumb-item active">{TodoList?.title ?? ''}</li>
 					</ul>
-					<h1 className="page-header mb-0">{TodoList.title ?? ''}</h1>
+					<h1 className="page-header mb-0">{TodoList?.title ?? ''}</h1>
 				</div>
 				<div className="ms-auto">
 					<button
@@ -56,9 +53,11 @@ function ListViewer() {
 			</div>
 			<div className="row">
 				<div className="col-12">
-					<Card header={`Редактирование списка `}>
-						<TodoListEditor todoListId={TodoList.id} />
-					</Card>
+                    {TodoList &&
+                        <Card header={`Редактирование списка `}>
+    						<TodoListEditor todoListId={TodoList.id} />
+    					</Card>
+                    }
 				</div>
 			</div>
 		</>
