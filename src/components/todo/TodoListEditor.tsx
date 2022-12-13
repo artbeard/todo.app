@@ -26,11 +26,125 @@ interface ITodoListEditorProps{
 function TodoListEditor({todoListId}: ITodoListEditorProps)
 {
 	let navigate = useNavigate();
+	
+	/**
+	 * Собственно, список дел
+	 */
+	let todoList: IToDoList = Store.getTodoListById(todoListId);
+	/**
+	 * Выполнено пунктов
+	 */
+	let completedCount = todoList.items.filter((el) => el?.completed === true).length;
+	/**
+	 * Всего пунктов
+	 */
+	let totalCount = todoList.items.length;
+	/**
+	 * Элемент списка дел
+	 */
+	const [todoItem, setTodoItem] = useState({
+		id: null,
+		content: '',
+		position: 0,
+		completed: false
+	} as IToDo);
 
+	/**
+	 * Стейт формы для изменения заголовка
+	 */
+	const [todoTitle, setTodoTitle] = useState('');
+	/**
+	 * Анимация запроса к серверу
+	 */
+	const [processing, setProcessing] = useState(false);
+
+
+
+	/**
+	 * Ошибка при редактировании названия пункта
+	 */
+	const [todoItemError, setTodoItemError] = useState('');
+	/**
+	 * Ошибка изменения заголовка
+	 */
+	const [todoTitleError, setTodoTitleError] = useState('');
+	
+
+
+	/**
+	 * Отображение окна создяния нового пункта
+	 */
+	const [addItemModal, setAddItemModal] = useState(false);
 	/**
 	 * Отображение окна с подтверждением удаления списка
 	 */
 	const [delModal, setDelModal] = useState(false);
+	/**
+	 * Отображение окна редактирования заголовка
+	 */
+	const [changeTodoTitleModal, setChangeTodoTitleModal] = useState(false);
+
+
+
+	/**
+	 * Открыть модальное окно для создания новго элемента
+	 */
+	const createNewItem = function()
+	{
+		setProcessing(false);
+		setTodoItemError('');
+		setTodoItem({
+			id: null,
+			content: '',
+			position: 0,
+			completed: false
+		});
+		setAddItemModal(true);
+	}
+	 /**
+	  * Открыть модальное окно для редактирования
+	  * @param todoItem 
+	  */
+	const changeItem = function(todoItem: IToDo){
+		setProcessing(false);
+		setTodoItemError('');
+		setTodoItem(todoItem);
+		setAddItemModal(true);
+	}
+	 
+	/**
+	* Сохранение в store 
+	* @returns 
+	*/
+	const saveItemToStore = function()
+	{
+		if (!todoItem.content)
+		{
+			setTodoItemError('Текст пункта не может быть пустым');
+			return;
+		}
+		setTodoItemError('');
+		setProcessing(true);
+		let storeRequest = todoItem.id === null
+			? Store.createNewTodoItem(todoItem, todoList.id as number)
+			: Store.updateTodoItem(todoItem, todoList.id as number);
+		storeRequest
+			.then((res)=>{
+				//ок
+			})
+			.catch(err => {
+				console.log(err);
+			})
+			.finally(()=>{
+				setProcessing(false);
+				setAddItemModal(false);
+			})
+	}
+
+	/**
+	 * Удаление списка дел
+	 * @param todoList 
+	 */
 	const deleteTodoList = function(todoList: IToDoList){
 		setProcessing(true);
 		Store.removeList(todoList.id as number)
@@ -42,105 +156,42 @@ function TodoListEditor({todoListId}: ITodoListEditorProps)
 				setProcessing(false);
 			})
 	}
-
-
-	/**
-	 * Собственно, список дел
-	 */
-	let todoList: IToDoList = Store.getTodoListById(todoListId);
-	/**
-	 * Отображение окна создяния нового списка
-	 */
-	const [addItemModal, setAddItemModal] = useState(false);
-	/**
-	 * Анимация запроса к серверу
-	 */
-	 const [processing, setProcessing] = useState(false);
-	/**
-	 * Ошибка при редактировании названия пункта
-	 */
-	const [todoItemError, setTodoItemError] = useState('');
-	/**
-	 * Элемент списка дел
-	 */
-	const [todoItem, setTodoItem] = useState({
-		id: null,
-		content: '',
-		position: 0,
-		completed: false
-	} as IToDo);
-
-
-	/**
-	 * Открыть модальное окно для создания новго элемента
-	 */
-	const createNewItem = function()
-	{
-		setProcessing(false);
-		setTodoItemError('');
-		setTodoItem({id: null,
-			content: '',
-			position: 0,
-			completed: false
-		});
-		setAddItemModal(true);
-	}
-
-	/**
-	 * Открыть модальное окно для редактирования
-	 * @param todoItem 
-	 */
-	const changeItem = function(todoItem: IToDo){
-		setProcessing(false);
-		setTodoItemError('');
-		setTodoItem(todoItem);
-		setAddItemModal(true);
-	}
 	
 	/**
-	 * Сохранение в store 
-	 * @returns 
+	 * Изменение заголовка
 	 */
-	const saveItemToStore = function()
+	const changeTodoTitle = function()
 	{
-		if (!todoItem.content)
+		setTodoTitleError('');
+		if (todoTitle === '')
 		{
-			setTodoItemError('Текст пункта не может быть пустым');
-			return;
+			setTodoTitleError('Заголовок списка не может быть пустым');
 		}
-		setTodoItemError('');
-		setProcessing(true);
-		//updateTodoItem
-		//createNewTodoItem
-		let storeRequest = todoItem.id === null
-			? Store.createNewTodoItem(todoItem, todoList.id as number)
-			: Store.updateTodoItem(todoItem, todoList.id as number);
-		storeRequest
-			.then((res)=>{
-				setProcessing(false);
-				setAddItemModal(false);
-				//setNewListTitle({id: null, title: ''});
-			})
-			.catch(err => {
-				setProcessing(false);
-				setAddItemModal(false);
-				//setNewListTitle({id: null, title: ''});
-				console.log(err);
-			})
+		else if (todoTitle === todoList.title)
+		{
+			setChangeTodoTitleModal(false);
+		}
+		else
+		{
+			setProcessing(true);
+			Store.changeListTilte(todoList.id as number, todoTitle)
+				.then((res)=>{
+					console.log('изменили название', res);
+				})
+				.finally(()=>{
+					setProcessing(false);
+					setChangeTodoTitleModal(false);
+				});
+		}
 	}
-
-	let completedCount = todoList.items.filter((el) => el?.completed === true).length;
-	let totalCount = todoList.items.length;
 
 	return (
 		<div className="list-group-item d-flex px-3 px-xl-5">
 			<div className="flex-fill pt-2">
-				{/* <div className="fw-400 mb-3">
-					{todoList.title}
-				</div> */}
-				{/* <div className="small text-white text-opacity-50 mb-2">#29930 closed yesterday by Sean</div> */}
 				<div className="mb-1">
-					<button className="btn btn-sm btn-outline-default"><i className="far fa-edit"></i> <b>Изменить название</b></button>
+					<button className="btn btn-sm btn-outline-default"
+						onClick={()=>{setTodoTitle(todoList.title); setChangeTodoTitleModal(true);}}
+						><i className="far fa-edit"></i> <b>Изменить название</b></button>
 					<span className="btn btn-sm btn-outline-danger ms-1 ms-md-3"
 						onClick={()=>setDelModal(true)}
 						><i className="fa fa-trash"></i> <b>Удалить список</b></span>
@@ -213,7 +264,27 @@ function TodoListEditor({todoListId}: ITodoListEditorProps)
 						</div>
 					</Modal>
 				}
-				
+				{
+					changeTodoTitleModal &&
+					<Modal header='Изменить название списка'
+						onOk={changeTodoTitle}
+						processing={processing}
+						onCancel={()=>{setChangeTodoTitleModal(false)}}>
+						<form className="row"
+							onSubmit={(e) => {e.preventDefault(); changeTodoTitle();}}
+							>
+							<div className="form-group mb-3">
+								<label className="form-label">Введите новое название списка</label>
+								<input type="text"
+									className={'form-control' + (todoTitleError !== '' ? ' is-invalid' : '')}
+									value={todoTitle}
+									onChange={(e) => {setTodoTitle(e.target.value)}}
+									/>
+									{todoTitleError && <div className="invalid-feedback">{todoTitleError}</div>}
+							</div>
+						</form>
+					</Modal>
+				}
 			</div>
 		</div>
 	)

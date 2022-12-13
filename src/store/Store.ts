@@ -104,6 +104,19 @@ class Store{
         })
     }
 
+    async changeListTilte(id: number, title: string): Promise<IToDoList>
+    {
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                runInAction(()=>{
+                    this.getTodoListById(id).title = title;
+                    resolve(this.getTodoListById(id));
+                });
+                
+            }, 1500 );
+        })
+    }
+
     // insertItem(item: IToDo, todoList: IToDoList) {
     //     todoList.items.push(item)
     // }
