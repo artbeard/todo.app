@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { IToDoList } from '../models';
 import Store from '../store/Store';
-
+import { observer } from "mobx-react-lite";
 import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
 /**
@@ -65,4 +65,4 @@ function ListViewer() {
 	);
 }
 
-export default ListViewer;
+export default observer(ListViewer);
