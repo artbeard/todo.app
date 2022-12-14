@@ -62,12 +62,18 @@ class Store{
 	/**
 	 * Поиск списка по id
 	 * @param id number | null
-	 * @returns IToDoList | undefined
+	 * @returns IToDoList
 	 */
-	getTodoListById(id: number | null): IToDoList | undefined
+	getTodoListById(id: number | null): IToDoList
 	{
-		//todo trow new Error('Список не найден')
-		return this.todoList.find(el => el.id === id)
+		let result = undefined;
+		if (id !== null)
+		{
+			result = this.todoList.find(el => el.id === id);
+		}
+		if (result === undefined)
+			throw new Error('Список не найден');
+		return result;
 	}
 
 	/**
@@ -149,7 +155,7 @@ class Store{
 	}
 
 
-	
+
 	/**
 	 * Запрос к серверу на создание нового списка дел
 	 * @param item IToDo
