@@ -14,8 +14,6 @@ function TodoItem({item, todoListID}: ITodoItemProps)
 			<input type="checkbox"
                 checked={item.completed}
                 onChange={(e)=>{
-                    //TodoManager.changeCompleted(item.id, e.target.checked, toDoListID)
-                    //Store.getTodoListById(todoListID).items.find((el:IToDo) => {return el.id === item.id}).completed = e.target.checked;
                     Store.setCompleted(item, e.target.checked);
                 }}
                 className="form-check-input"
