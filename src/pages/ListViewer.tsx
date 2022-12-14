@@ -7,7 +7,7 @@ import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
 import { 
     //IToDoList,
-    toDoListNullObject } from '../models';
+    toDoListNullObject } from '../use/models';
 import { NotFoundError } from '../use/errors';
 /**
  * Страница Просмотр содержимого списка

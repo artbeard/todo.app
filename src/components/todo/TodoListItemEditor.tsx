@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import DropDown from '../DropDown';
-import {IToDo} from '../../models'
+import {IToDo} from '../../use/models'
 import Store from '../../store/Store';
 
 interface ITodoItemProps{

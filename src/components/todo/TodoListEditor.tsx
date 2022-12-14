@@ -5,7 +5,7 @@ import TodoProgress from './TodoProgress'
 import TodoListItemEditor from './TodoListItemEditor';
 import Modal from '../Modal';
 import Store from '../../store/Store';
-import { IToDoList, IToDo } from '../../models'
+import { IToDoList, IToDo, toDoNullObject } from '../../use/models'
 
 interface ITodoListEditorProps{
 	todoListId: number | null
@@ -36,12 +36,7 @@ function TodoListEditor({todoListId}: ITodoListEditorProps)
 	/**
 	 * Элемент списка дел
 	 */
-	const [todoItem, setTodoItem] = useState({
-		id: null,
-		content: '',
-		position: 0,
-		completed: false
-	} as IToDo);
+	const [todoItem, setTodoItem] = useState(toDoNullObject);
 
 	/**
 	 * Стейт формы для изменения заголовка

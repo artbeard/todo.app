@@ -1,4 +1,4 @@
-import {IToDo} from '../../models'
+import {IToDo} from '../../use/models'
 import Store from '../../store/Store'
 import { observer } from "mobx-react-lite";
 

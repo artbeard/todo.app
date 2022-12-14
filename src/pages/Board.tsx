@@ -5,7 +5,7 @@ import Store from '../store/Store';
 import Card from '../components/card/Card'
 import TodoList from '../components/todo/TodoList';
 import Modal from '../components/Modal'
-import { IToDoList } from '../models';
+import { IToDoList } from '../use/models';
 
 /**
  * Страница Компонент отрисовки доски со списками

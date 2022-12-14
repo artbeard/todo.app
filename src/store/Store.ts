@@ -1,5 +1,5 @@
 import { runInAction, makeAutoObservable } from 'mobx'
-import { IToDo, IToDoList } from '../models'
+import { IToDo, IToDoList } from '../use/models'
 import { NotFoundError } from '../use/errors';
 
 class Store{
