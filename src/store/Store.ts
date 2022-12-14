@@ -67,7 +67,7 @@ class Store{
 	getTodoListById(id: number | null): IToDoList
 	{
 		let result = undefined;
-		if (id !== null)
+		if (null !== id && !isNaN(id))
 		{
 			result = this.todoList.find(el => el.id === id);
 		}
