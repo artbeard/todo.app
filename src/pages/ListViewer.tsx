@@ -1,11 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import Store from '../store/Store';
 import Card from '../components/card/Card'
 import TodoListEditor from '../components/todo/TodoListEditor'
-import { IToDoList } from '../models';
+import { 
+    //IToDoList,
+    toDoListNullObject } from '../models';
 /**
  * Страница Просмотр содержимого списка
  * @returns JSX
@@ -13,20 +15,21 @@ import { IToDoList } from '../models';
 function ListViewer() {
 	const params = useParams();
     const navigate = useNavigate();
-	/**
-     * Id списка дел, получаем из роута
-     */
-    let TodoListId: number|null = parseInt(String(params.id));
+	//По умолчанию nullObject
+    const [todoList, setTodoList] = useState(toDoListNullObject)
     
-	let TodoList: IToDoList = Store.getTodoListById(TodoListId) as IToDoList;
-
     useEffect(() => {
-        //Редиректим на страницу ошибки, если требуемый список не найден
-        if (!TodoList)
+        //Id списка дел, получаем из роута
+        let TodoListId: number = parseInt(params.id as string);
+        try
+        {
+            setTodoList( Store.getTodoListById(TodoListId) );
+        }
+        catch (e)
         {
             navigate(`/todo/error/404`);
         }
-    })
+    }, [params.id, navigate])
     
 	return (
 		<>
@@ -35,9 +38,9 @@ function ListViewer() {
 					<ul className="breadcrumb">
 						<li className="breadcrumb-item"><a href="/">Главная</a></li>
 						<li className="breadcrumb-item"><Link to="/todo/">Мои задачи</Link></li>
-						<li className="breadcrumb-item active">{TodoList?.title ?? ''}</li>
+						<li className="breadcrumb-item active">{todoList?.title ?? ''}</li>
 					</ul>
-					<h1 className="page-header mb-0">{TodoList?.title ?? ''}</h1>
+					<h1 className="page-header mb-0">{todoList?.title ?? ''}</h1>
 				</div>
 				<div className="ms-auto">
 					<button
@@ -52,9 +55,9 @@ function ListViewer() {
 			</div>
 			<div className="row">
 				<div className="col-12">
-                    {TodoList &&
+                    {todoList.id !== null &&
                         <Card header={`Редактирование списка `}>
-    						<TodoListEditor todoListId={TodoList.id} />
+    						<TodoListEditor todoListId={todoList.id} />
     					</Card>
                     }
 				</div>
