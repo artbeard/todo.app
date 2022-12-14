@@ -1,5 +1,6 @@
-import {runInAction, makeAutoObservable} from 'mobx'
-import {IToDo, IToDoList} from '../models'
+import { runInAction, makeAutoObservable } from 'mobx'
+import { IToDo, IToDoList } from '../models'
+import { NotFoundError } from '../use/errors';
 
 class Store{
 
@@ -72,7 +73,7 @@ class Store{
 			result = this.todoList.find(el => el.id === id);
 		}
 		if (result === undefined)
-			throw new Error('Список не найден');
+			throw new NotFoundError('Список не найден');
 		return result;
 	}
 

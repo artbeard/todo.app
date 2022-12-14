@@ -8,6 +8,7 @@ import TodoListEditor from '../components/todo/TodoListEditor'
 import { 
     //IToDoList,
     toDoListNullObject } from '../models';
+import { NotFoundError } from '../use/errors';
 /**
  * Страница Просмотр содержимого списка
  * @returns JSX
@@ -27,7 +28,14 @@ function ListViewer() {
         }
         catch (e)
         {
-            navigate(`/todo/error/404`);
+            if (e instanceof NotFoundError)
+            {
+                navigate(`/todo/error/404`);
+            }
+            else
+            {
+                throw e;
+            }
         }
     }, [params.id, navigate])
     
