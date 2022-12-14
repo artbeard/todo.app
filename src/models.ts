@@ -5,6 +5,13 @@ export interface IToDo{
     completed: boolean
 }
 
+export const toDoNullObject: IToDo = {
+    id: null,
+    content: '',
+    position: 0,
+    completed: false
+}
+
 export interface IToDoList{
     id: number|null,
     title: string,
@@ -13,17 +20,10 @@ export interface IToDoList{
     items: IToDo[]
 }
 
-// export interface IToDoCreate{
-//     id: null,
-//     content: string,
-//     position: number,
-//     completed: boolean
-// }
-
-// export interface IToDoListCreate{
-//     id: null,
-//     title: string,
-//     userId: string|null,
-//     isActive: boolean,
-//     items: IToDo[]
-// }
+export const toDoListNullObject: IToDoList = {
+    id: null,
+    title: '',
+    userId: null,
+    isActive: true,
+    items: []
+}
