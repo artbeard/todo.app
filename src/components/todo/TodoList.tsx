@@ -25,7 +25,7 @@ function TodoList({todoList}: ITodoListProps)
 	return (
 		<div className="list-group-item d-flex px-3 py-3">
 			<div className="me-3 pt-1">
-				<i className={'fa-fw fa-lg ' + (completedCount === totalCount 
+				<i className={'fa-fw fa-lg ' + (totalCount > 0 && completedCount === totalCount 
 					? 'far fa-check-circle text-success'
 					: 'fas fa-tasks text-default'
 					)}></i>
