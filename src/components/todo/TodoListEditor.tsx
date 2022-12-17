@@ -139,7 +139,7 @@ function TodoListEditor({todoListId}: ITodoListEditorProps)
 		Store.removeList(todoList.id as number)
 			.then(()=>{
 				//возврат на доску
-				navigate(`/todo/`);
+				navigate(`/`);
 			})
 			.finally(()=>{
 				setProcessing(false);

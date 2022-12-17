@@ -54,7 +54,7 @@ function Board() {
 			Store.createNewList(newList.title)
 				.then((res: IToDoList)=>{
 					//Редирект на редактор=
-					navigate(`/todo/edit/${res.id}`);
+					navigate(`/edit/${res.id}`);
 				})
 				.catch(err => {
 					//Показать уведомление			

@@ -36,7 +36,7 @@ function TodoList({todoList}: ITodoListProps)
 						Задачи ({totalCount}/{completedCount})
 					</div>
 					<div>
-						<Link to={`/todo/edit/${todoList.id}`} className="text-white text-opacity-50 text-decoration-none">
+						<Link to={`/edit/${todoList.id}`} className="text-white text-opacity-50 text-decoration-none">
 							<i className="far fa-edit"></i> Редактировать
 						</Link>
 					</div>

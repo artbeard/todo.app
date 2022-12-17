@@ -30,7 +30,7 @@ function ListViewer() {
         {
             if (e instanceof NotFoundError)
             {
-                navigate(`/todo/error/404`);
+                navigate(`/error/404`);
             }
             else
             {
@@ -45,7 +45,7 @@ function ListViewer() {
 				<div className="flex-fill">
 					<ul className="breadcrumb">
 						<li className="breadcrumb-item"><a href="/">Главная</a></li>
-						<li className="breadcrumb-item"><Link to="/todo/">Мои задачи</Link></li>
+						<li className="breadcrumb-item"><Link to="/">Мои задачи</Link></li>
 						<li className="breadcrumb-item active">{todoList?.title ?? ''}</li>
 					</ul>
 					<h1 className="page-header mb-0">{todoList?.title ?? ''}</h1>

@@ -28,13 +28,13 @@ function App() {
 			</div>
 		}
 		{storeInit &&
-			<Router>
+			<Router basename={'/todo'}>
 				<Routes>
-					<Route path="/todo/" element={<Board />} />
-					<Route path="/todo/create" element={<ListViewer />} />
-					<Route path="/todo/edit/:id" element={<ListViewer />} />
-					<Route path="/todo/error/404" element={<Error />} />
-					<Route path="*" element={<Error />} />
+					<Route path="/" element={<Board />} />
+					<Route path="/create" element={<ListViewer />} />
+					<Route path="/edit/:id" element={<ListViewer />} />
+					<Route path="/error/404" element={<Error />} />
+					{/* <Route path="*" element={<Error />} /> */}
 				</Routes>
 			</Router>
 		}
