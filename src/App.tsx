@@ -1,16 +1,33 @@
-import {useState} from 'react';
+import {useState, ReactElement} from 'react';
 import {
 	BrowserRouter as Router,
 	Route,
-	Routes
+	Routes,
+	Navigate,
+	Outlet
 } from 'react-router-dom';
 import Board from './pages/Board'
 import ListViewer from './pages/ListViewer'
 import Store from './store/Store';
 import Error from './pages/Error';
+import {getUser} from './use/getUser';
+import User from './pages/User';
+
+interface IProtectedRoute{
+	user: string | null | undefined,
+}
+function ProtectedRoute({ user }: IProtectedRoute): ReactElement {
+	if (!user) {
+	  return <Navigate to="/user" replace />;
+	}
+	return <Outlet /> as ReactElement;
+};
+
+
 
 function App() {
 	const [storeInit, setStoreInit] = useState(false);
+	let user = getUser();
 	Store.init()
 		.then(()=>{
 			setStoreInit(true);
@@ -30,11 +47,16 @@ function App() {
 		{storeInit &&
 			<Router basename={'/todo'}>
 				<Routes>
-					<Route path="/" element={<Board />} />
-					<Route path="/create" element={<ListViewer />} />
-					<Route path="/edit/:id" element={<ListViewer />} />
+					<Route path="/user" element={<User/>} />
+					<Route path="/user/:uid" element={<User/>} />
+					
+					<Route element={<ProtectedRoute user={user} />}>
+						<Route path="/" element={<Board/>} />
+						<Route path="/create" element={<ListViewer />} />
+						<Route path="/edit/:id" element={<ListViewer />} />
+					</Route>
+					
 					<Route path="/error/404" element={<Error />} />
-					{/* <Route path="*" element={<Error />} /> */}
 				</Routes>
 			</Router>
 		}
