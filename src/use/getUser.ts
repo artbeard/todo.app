@@ -14,29 +14,38 @@ function setCookieUser(value: string){
 	document.cookie = data;
 }
 
-function setUser(uid: string)
+export function setUser(uid: string)
 {
 	setCookieUser(uid);
 	window.localStorage.setItem('uid', uid);
 }
 
-export function createUser()
+export function createUser(userName: string): Promise<boolean>
 {
-	fetch(apiPoints.makeUser, {
-		method: 'POST',
-		headers: {
-		  'Content-Type': 'application/json;charset=utf-8'
-		},
+	return new Promise((resolve, reject) => {
+		fetch(apiPoints.makeUser, {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({name: userName})
+		})
+		.then(response => {
+			if (response.status >= 200 && response.status < 300)
+			{
+				console.log('Создание пользователя');
+				resolve(response.json())
+			}
+			else
+			{
+				reject(false)
+			}
+		})
+		.catch((err)=>{
+			console.log('Ошибка set completed', err)
+			reject(false);
+		});
 	})
-	.then(response => {
-		if (response.status === 200)
-		{
-			
-		}
-	})
-	.catch((err)=>{
-		console.log('Ошибка set completed', err)
-	});
 }
 
 export function getUser()
