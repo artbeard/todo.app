@@ -1,16 +1,7 @@
 import { runInAction, makeAutoObservable } from 'mobx'
 import { IToDo, IToDoList } from '../use/models'
 import { NotFoundError } from '../use/errors';
-
-const apiPoints = {
-	todoList: `/api/todo/list`, //GET получение массива списков, POST создание нового списка
-	editTodoList: `/api/todo/list/:list_id`, //Изменение / удаление списка
-
-	addTodoItem: `/api/todo/item/in/:list_id`, //post Создание элемента списка
-	editTodoItem: `/api/todo/item/:item_id`, //Изменение/удаление элемента списка
-	todoItemComplete: `/api/todo/item/:item_id/complete`, //Отметка выполнения/невыполнеия дела
-	
-}
+import apiPoints from '../use/apiPoints';
 
 class Store{
 
