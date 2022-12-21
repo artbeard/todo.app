@@ -1,33 +1,87 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getUser, setUser, createUser } from '../use/getUser';
-//import { observer } from "mobx-react-lite";
-//import Store from '../store/Store';
-//import Card from '../components/card/Card'
-//import TodoListEditor from '../components/todo/TodoListEditor'
-// import { 
-//     //IToDoList,
-//     toDoListNullObject } from '../use/models';
+import { getUid, getToken, setUser, createUser, setCookie, getUser } from '../use/getUser';
+
 //import { NotFoundError } from '../use/errors';
 import Modal from '../components/Modal';
+//import apiPoints from '../use/apiPoints';
+import { IUser } from '../use/models';
+
 
 /**
  * Страница Просмотр содержимого списка
  * @returns JSX
  */
 function User() {
+	const navigate = useNavigate();
+	const params = useParams();
 
 	const [createUserModal, setCreateUserModal] = useState(false);
 	const [userName, setUserName] = useState('');
 	const [errorUserName, setErrorUserName] = useState('');
 	const [processing, setProcessing] = useState(false);
-	
 
-	const params = useParams();
-	let currentUser: string | undefined = getUser();
-	let uid: string | undefined = params?.uid ?? undefined;
-	
+	const [currentUid, setCurrentUid] = useState(() => getUid());
+	const [currentToken, setCurrentToken] = useState(() => getToken());
 
+	let uid: number | undefined = params?.uid ? parseInt(params.uid) : undefined;
+	let token: string | undefined = params?.token ?? undefined;
+	
+	console.log(uid, token);
+	// if ((uid && token) && (!currentUid || !currentToken))
+	// {
+	// 	//Проверка пользователя currentUid/currentToken
+	// 	getUser(uid, token);
+	// }	
+
+	//Если параметров нет
+		// поиск папарметров в хранилище
+			//Если в хранилище нет
+				//Регистрация
+			//В хрвнилище есть
+				//Зарос с сервера
+	//Если параметры есть
+		//проверка на сервере
+			//Если все ок
+				//Установка cookies
+			//Если ошибка
+				//на регистрацию
+
+	useEffect(()=>{
+		//перенос пользователя
+		if ((uid && token))
+		{
+			getUser(uid, token)
+				.then((user: IUser) => {
+					console.log('Перенесенный пользователь', user);
+					setCurrentUid(getUid());
+					setCurrentToken(getToken());
+				});
+		}
+		else if (!currentUid || !currentToken)
+		{
+			console.log(currentUid, currentToken, 'Редрект На регистрацию');
+			setCreateUserModal(true);
+		}
+		// else if (currentUid && uid === undefined)
+		// {
+		// 	console.log(currentUser, uid, 'На редирект /user/uid');
+		// }
+		// else if (currentUser === undefined && uid !== undefined)
+		// {
+		// 	console.log(currentUser, uid, 'Установить текущего пользователя(Сделать подверждение)');
+		// }
+		// else if (currentUser !== undefined && uid !== undefined && currentUser !== uid)
+		// {
+		// 	console.log(currentUser, uid, 'Уведомление о презаписи');
+		// }
+		else
+		{
+			setCreateUserModal(false);
+		}
+
+	}, [currentUid, currentToken, uid, token]);
+	
 	const careateNewUser = function() {
 		setErrorUserName('');
 		if (userName == '')
@@ -37,8 +91,12 @@ function User() {
 		}
 		setProcessing(true);
 		createUser(userName)
-			.then(res => {
-				console.log(res)
+			.then((createdUser: IUser) => {
+				console.log(createdUser);
+				setCurrentUid(createdUser.id);
+				setCurrentToken(createdUser.hash as string);
+				//setUser(createdUser.id, createdUser.hash as string);
+				navigate(`/user/:id`.replace(':id', String(createdUser.id)));
 			})
 			.catch((err) => {
 				console.log(err)
@@ -47,30 +105,6 @@ function User() {
 				setProcessing(false);
 			})
 	};
-
-
-	useEffect(()=>{
-		
-		if (currentUser === undefined && uid === undefined)
-		{
-			console.log(currentUser, uid, 'На регистрацию');
-			setCreateUserModal(true);
-		}
-		else if (currentUser !== undefined && uid === undefined)
-		{
-			console.log(currentUser, uid, 'На редирект /user/uid');
-		}
-		else if (currentUser === undefined && uid !== undefined)
-		{
-			console.log(currentUser, uid, 'Установить текущего пользователя(Сделать подверждение)');
-		}
-		else if (currentUser !== undefined && uid !== undefined && currentUser !== uid)
-		{
-			console.log(currentUser, uid, 'Уведомление о презаписи');
-		}
-
-	}, [currentUser, uid]);
-	
 
 	return (
 		<>

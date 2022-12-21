@@ -1,26 +1,29 @@
 import apiPoints from "./apiPoints";
+import { IUser } from '../use/models';
 
-function getCookieUser(): string | undefined {
+function getCookie(name: string): string | undefined {
 	let cookies: string[] = document.cookie.split('; ');
-	return cookies.find((row: string) => row.startsWith('uid='))?.split('=')[1];
+	return cookies.find((row: string) => row.startsWith(`${name}=`))?.split('=')[1];
 }
 
-function setCookieUser(value: string){
-	let expires: string = new Date( + new Date() + (60 * 60 * 24 * 365)).toUTCString();
+export function setCookie(name:string, value: string | number){
+	let expires: string = new Date( + new Date() + (1000 * 60 * 60 * 24 * 365)).toUTCString();
 	let path: string = '/';
-	let data = `uid=` + encodeURIComponent(value) + '; ';
-	data += path + '; ';
-	data += expires + '; ';
+	let data = `${name}=` + encodeURIComponent(value) + '; ';
+	data += 'Path=' + path + '; ';
+	data += 'Expires=' + expires + '; ';
 	document.cookie = data;
 }
 
-export function setUser(uid: string)
+export function setUser(uid: number, token: string)
 {
-	setCookieUser(uid);
-	window.localStorage.setItem('uid', uid);
+	//setCookie('uid', uid);
+	//setCookie('token', token);
+	// window.localStorage.setItem('uid', String(uid));
+	// window.localStorage.setItem('token', token);
 }
 
-export function createUser(userName: string): Promise<boolean>
+export function createUser(userName: string): Promise<IUser>
 {
 	return new Promise((resolve, reject) => {
 		fetch(apiPoints.makeUser, {
@@ -42,23 +45,77 @@ export function createUser(userName: string): Promise<boolean>
 			}
 		})
 		.catch((err)=>{
-			console.log('Ошибка set completed', err)
+			console.log('Ошибка create user', err)
 			reject(false);
 		});
 	})
 }
 
-export function getUser()
+export function getUid(): number | undefined
 {
-	let currntUser: string | undefined = getCookieUser();
-	if (currntUser === undefined)
+	let currntUid: string | number | undefined = getCookie('uid');
+	if (!currntUid)
 	{
-		currntUser = window.localStorage.getItem('uid') ?? undefined;
-		if (!currntUser)
-		{
-			return undefined;
-		}
+		// currntUid = window.localStorage.getItem('uid') ?? undefined;
+		// if (!currntUid)
+		// {
+		// 	return undefined;
+		// }
+		// else
+		// {
+		// 	//обновляем данные в cookies
+		// 	setCookie('uid', currntUid);
+		// }
+		return undefined;
 	}
-	setUser(currntUser); //Обновляем данные
-	return currntUser;
+	return  (+ currntUid);
+}
+
+export function getToken(): string | undefined
+{
+	let currntToken: string | undefined = getCookie('token');
+	if (currntToken === undefined)
+	{
+		// currntToken = window.localStorage.getItem('token') ?? undefined;
+		// if (!currntToken)
+		// {
+		// 	return undefined;
+		// }
+		// else
+		// {
+		// 	//обновляем данные в cookies
+		// 	setCookie('token', currntToken);
+		// }
+		return undefined;
+	}
+	return currntToken;
+}
+
+
+export function getUser(uid: number | undefined = undefined, token: string | undefined = undefined): Promise<IUser>
+{
+	return new Promise((resolve, reject) => {
+		fetch( uid && token
+			? apiPoints.setUser.replace(':uid', String(uid)).replace(':token', token)
+			: apiPoints.getUser, {
+			method: 'GET',
+			headers: {
+			  'Content-Type': 'application/json;charset=utf-8'
+			},
+		})
+		.then(response => {
+			if (response.status >= 200 && response.status < 300)
+			{
+				resolve(response.json())
+			}
+			else
+			{
+				reject(false)
+			}
+		})
+		.catch((err)=>{
+			console.log('Ошибка set completed', err)
+			reject(false);
+		});
+	})
 }

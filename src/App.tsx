@@ -10,14 +10,17 @@ import Board from './pages/Board'
 import ListViewer from './pages/ListViewer'
 import Store from './store/Store';
 import Error from './pages/Error';
-import {getUser} from './use/getUser';
+import { getUser, getUid } from './use/getUser';
 import User from './pages/User';
+import { IUser } from './use/models'
+
+
 
 interface IProtectedRoute{
-	user: string | null | undefined,
+	userId: number | null | undefined,
 }
-function ProtectedRoute({ user }: IProtectedRoute): ReactElement {
-	if (!user) {
+function ProtectedRoute({ userId }: IProtectedRoute): ReactElement {
+	if (!userId) {
 	  return <Navigate to="/user" replace />;
 	}
 	return <Outlet /> as ReactElement;
@@ -27,11 +30,20 @@ function ProtectedRoute({ user }: IProtectedRoute): ReactElement {
 
 function App() {
 	const [storeInit, setStoreInit] = useState(false);
-	let user = getUser();
-	Store.init()
-		.then(()=>{
+	
+	let currentUid = getUid();
+
+	getUser()
+		.then((user: IUser) => {
+			currentUid = user.id;
+			Store.init()
+				.then(()=>{
+					setStoreInit(true);
+				});
+		})
+		.catch(()=>{
 			setStoreInit(true);
-		});
+		})
 	return (
 		<>
 		{!storeInit && 
@@ -44,13 +56,14 @@ function App() {
 				</div>				
 			</div>
 		}
-		{storeInit &&
+		{ //storeInit &&
 			<Router basename={'/todo'}>
 				<Routes>
 					<Route path="/user" element={<User/>} />
-					<Route path="/user/:uid" element={<User/>} />
+					{/* <Route path="/user/:uid" element={<User/>} /> */}
+					<Route path="/user/:uid/:token" element={<User/>} />
 					
-					<Route element={<ProtectedRoute user={user} />}>
+					<Route element={<ProtectedRoute userId={currentUid} />}>
 						<Route path="/" element={<Board/>} />
 						<Route path="/create" element={<ListViewer />} />
 						<Route path="/edit/:id" element={<ListViewer />} />
