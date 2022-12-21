@@ -27,3 +27,14 @@ export const toDoListNullObject: IToDoList = {
     isActive: true,
     items: []
 }
+
+export interface IUser{
+    id: number,
+	name: string,
+	password: string | null
+	email: string | null
+	createdAt: Date, 
+	lastActive: Date, 
+	isActive: boolean,
+	hash: string | null
+}
