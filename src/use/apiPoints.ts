@@ -6,6 +6,11 @@ const apiPoints = {
 	editTodoItem: `/api/todo/item/:item_id`, //Изменение/удаление элемента списка
 	todoItemComplete: `/api/todo/item/:item_id/complete`, //Отметка выполнения/невыполнеия дела
 	
-    makeUser: `/api/todo/user/make`, //Создание пользователя без регистрации
+
+
+    makeUser: `/api/user/make`, //Создание пользователя без регистрации
+    getUser: `/api/user`, //Создание пользователя без регистрации
+    setUser: `/api/user/:uid/:token`, //Перенос пользователя на новое устройство
+    
 }
 export default apiPoints;
