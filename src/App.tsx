@@ -30,7 +30,6 @@ function App() {
 	
 	let currentUid = getUid();
 	let currentToken = getToken();
-	console.log('render app', currentUid);
 	const [storeInit, setStoreInit] = useState(false);
 	Store.init()
 		.then(()=>{
