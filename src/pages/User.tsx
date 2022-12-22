@@ -52,6 +52,11 @@ function User() {
 					setCurrentUser(user);
 					setCurrentUid(user.id);
 					setCurrentToken(user.hash as string);
+
+					//Todo загрузка списков
+					// Store.init()
+					// 	.then(()=>{});
+
 				});
 		}
 		//Если в куках пусто, показываем форму регистрации
