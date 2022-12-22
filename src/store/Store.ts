@@ -2,6 +2,7 @@ import { runInAction, makeAutoObservable } from 'mobx'
 import { IToDo, IToDoList } from '../use/models'
 import { NotFoundError } from '../use/errors';
 import apiPoints from '../use/apiPoints';
+import { getUid } from '../use/getUser';
 
 class Store{
 
@@ -96,21 +97,42 @@ class Store{
 	 * @returns Promise<IToDoList>
 	 */
 	async createNewList(title: string): Promise<IToDoList>
-	{
+	{	
 		return new Promise((resolve, reject) => {
-			setTimeout(()=>{
-				let newEl:IToDoList = {
-					id: 533,
-					title: title,
-					userId: 133,
-					isActive: true,
-					items: []
-				};
-				this.addTodoList(newEl);
-				resolve(
-					this.getTodoListById(newEl.id) as IToDoList
-				);
-			}, 1500 );
+			let uid = getUid();
+			let newEl:IToDoList = {
+				id: null,
+				title: title,
+				userId: uid as number,
+				isActive: true,
+				items: []
+			};
+			fetch(apiPoints.todoList, {
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json;charset=utf-8'
+				},
+				body: JSON.stringify({title: title})
+			})
+			.then(response => response.json())
+			.then(data => {
+				newEl.id = data.id;
+
+				runInAction(()=>{
+				 	//List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
+					this.todoList.push(newEl);
+				})
+				// this.addTodoList(newEl);
+				// resolve(
+				// 	this.getTodoListById(newEl.id) as IToDoList
+				// );
+				
+				resolve(newEl);
+			})
+			.catch((err)=>{
+				console.log('Ошибка Создания списка', err)
+				reject(false);
+			});
 		})
 	}
 
