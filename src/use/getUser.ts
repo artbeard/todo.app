@@ -15,14 +15,6 @@ export function setCookie(name:string, value: string | number){
 	document.cookie = data;
 }
 
-export function setUser(uid: number, token: string)
-{
-	//setCookie('uid', uid);
-	//setCookie('token', token);
-	// window.localStorage.setItem('uid', String(uid));
-	// window.localStorage.setItem('token', token);
-}
-
 export function createUser(userName: string): Promise<IUser>
 {
 	return new Promise((resolve, reject) => {
