@@ -102,12 +102,8 @@ export function getUser(uid: number | undefined = undefined, token: string | und
 			}
 			else
 			{
-				reject(false)
+				reject(response) //???
 			}
 		})
-		.catch((err)=>{
-			console.log('Ошибка set completed', err)
-			reject(false);
-		});
 	})
 }
