@@ -1,4 +1,4 @@
-import { useState, ReactElement } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
 	BrowserRouter as Router,
@@ -8,11 +8,11 @@ import {
 	Outlet,
 	Link
 } from 'react-router-dom';
+import { getUid, getToken, getUser } from './use/getUser';
 import Board from './pages/Board'
 import ListViewer from './pages/ListViewer'
 import Store from './store/Store';
 import Error from './pages/Error';
-import { getUid, getToken } from './use/getUser';
 import User from './pages/User';
 
 
@@ -28,16 +28,40 @@ function ProtectedRoute({ userId }: IProtectedRoute): ReactElement {
 
 function App() {
 	
-	let currentUid = getUid();
-	let currentToken = getToken();
-	const [storeInit, setStoreInit] = useState(false);
-	Store.init()
-		.then(()=>{
-			setStoreInit(true);
-		});
+	//let currentUid = getUid();
+    const [currentUid, setCurrentUid] = useState(getUid());
+	//let currentToken = getToken();
+	const [storeInit, setStoreInit] = useState(0); //-1 ошибка, 0 - загрузка, 1 - Ввсе ок!
+
+    useEffect(() => {
+        console.log('Инициализация');
+        // getUser()
+        //     .then(user => {
+        //         Store.init()
+        //     		.then(()=>{
+        //     			setStoreInit(1);
+        //     		})
+        //             .catch((err) => {
+        //                 setStoreInit(-1);
+        //             });
+        //     })
+        //     .catch( err => {
+        //         setStoreInit(-1);
+        //     });
+        Store.init()
+    		.then(()=>{
+                setCurrentUid(getUid())
+    			setStoreInit(1);
+    		})
+            .catch((err) => {
+                setCurrentUid(-1)
+                setStoreInit(-1);
+            });
+    }, [currentUid]);
+    
 	return (
 		<>
-		{!storeInit && 
+		{storeInit === 0 && 
 			<div className='col-12 py-5'>
 				<div className="text-center">
 					<div className="spinner-border"></div>
@@ -47,10 +71,24 @@ function App() {
 				</div>				
 			</div>
 		}
-		{ //storeInit &&
+
+        {storeInit === -1 && 
+			<div className='col-12 py-5'>
+				<div className="text-center">
+                    <div className="alert alert-danger">
+                        <strong>Во время загрузки произошла ошибка!</strong><br/>
+                    </div>
+                    <p className='my-3'>
+                    Попробуйте повторить запрос позднее.
+                    </p>
+				</div>
+			</div>
+		}
+
+		{ //storeInit === 1 &&
 			<Router basename={'/todo'}>
 				{
-					(currentUid && currentToken) &&
+					currentUid &&
 					ReactDOM.createPortal(
 						(<div className="menu-item dropdown dropdown-mobile-full">
 							<Link to={`/user`} className="menu-link">
