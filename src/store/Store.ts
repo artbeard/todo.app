@@ -23,12 +23,18 @@ class Store{
 	async init()
 	{
 		return fetch(apiPoints.todoList)
-			.then(response => response.json())
+			.then(response => {
+                // if (response.status >= 200 && response.status < 300)
+                // {
+                    return  response.json()
+                // }
+                // return Promise.resolve([]);
+            })
 			.then((data:IToDoList[]) => {
 				runInAction(()=>{
 					this.setTodoList(data);
 				})
-			});
+			})
 	}
 
 	/**
@@ -143,23 +149,35 @@ class Store{
 	 */
 	async removeList(id: number): Promise<boolean>
 	{
-		return new Promise((resolve, reject) => {
-			setTimeout(()=>{
-				runInAction(()=>{
-					let index = this.todoList.findIndex(el => el.id === id);
-					if (index > -1)
-					{
-						this.todoList.splice(index, 1);
-						resolve(true);
-					}
-					else
-					{
-						reject(false);
-					}
-				});
-				
-			}, 1500 );
-		})
+//		return new Promise((resolve, reject) => {
+        return fetch(apiPoints.editTodoList.replace(':list_id', String(id)), {
+				method: 'DELETE',
+				headers: {
+				  'Content-Type': 'application/json;charset=utf-8'
+				},
+			})
+			.then(() => {
+				let index = this.todoList.findIndex(el => el.id === id);
+				if (index > -1)
+				{
+					runInAction(()=>{
+                        this.todoList.splice(index, 1);
+				    });
+					//resolve(true);
+                    return true;
+				}
+				else
+				{
+					//reject(false);
+                    return false;
+				}
+			})
+			.catch((err)=>{
+				console.log('Ошибка Создания списка', err)
+				//reject(false);
+                return false;
+			});
+//		})
 	}
 
 	/**
@@ -172,6 +190,7 @@ class Store{
 	{
 		return new Promise((resolve, reject) => {
 			setTimeout(()=>{
+                console.log('НЕ РЕАЛИЗОВАНО!!!');
 				runInAction(()=>{
 					let changingToDo: IToDoList = this.getTodoListById(id) as IToDoList;
 					changingToDo.title = title;
