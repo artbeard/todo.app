@@ -28,7 +28,6 @@ export function createUser(userName: string): Promise<IUser>
 		.then(response => {
 			if (response.status >= 200 && response.status < 300)
 			{
-				console.log('Создание пользователя');
 				resolve(response.json())
 			}
 			else
