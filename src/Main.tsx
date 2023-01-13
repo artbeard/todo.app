@@ -85,13 +85,14 @@ export function Main() {
                     )
                 }
                 <Routes>
-                    <Route path="/user" element={<User/>} />
                     <Route path="/user/:uid/:token" element={<User/>} />
+                    <Route path="/user" element={<User/>} />
+                    
                     
                     <Route element={<ProtectedRoute userId={currentUid} />}>
-                        <Route path="/" element={<Board/>} />
-                        <Route path="/create" element={<ListViewer />} />
                         <Route path="/edit/:id" element={<ListViewer />} />
+                        <Route path="/create" element={<ListViewer />} />
+                        <Route path="/" element={<Board/>} />
                     </Route>
                     
                     <Route path="/error/404" element={<Error />} />
