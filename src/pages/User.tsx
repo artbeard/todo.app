@@ -122,14 +122,21 @@ function User() {
 	 */
 	const copyLinkToClipBoard = function ()
 	{
-		let linkUrl = `${document.location.protocol}//${document.location.hostname}/todo/user/${currentUid}/${currentToken}`;
-		navigator.clipboard.writeText(linkUrl)
-		.then(() => {
-			console.log('Ссылка на профиль скопирована');
-		})
-		.catch(err => {
-			console.error('Ошибка при копировании ссылки', err);
-		});
+		if (navigator.clipboard)
+        {
+            let linkUrl = `${document.location.protocol}//${document.location.hostname}/todo/user/${currentUid}/${currentToken}`;
+    		navigator.clipboard.writeText(linkUrl)
+    		.then(() => {
+    			console.log('Ссылка на профиль скопирована');
+    		})
+    		.catch(err => {
+    			console.error('Ошибка при копировании ссылки', err);
+    		});
+        }
+        else
+        {
+            console.error('Отсутствует объект navigator.clipboard');
+        }
 	};
 
 
@@ -167,14 +174,12 @@ function User() {
 							</div>
 							
 							<div className='text-center py-3'>
-								{/* <Link to={`/`} className="btn btn-outline-info">
+								<Link to={`/`} className="btn btn-outline-info">
 									Перейти к спискам дел
 								</Link> 
-								//Todo прокинуть контекст к корневому элементу
-								*/}
-								<button className="btn btn-outline-info"
+								{/* <button className="btn btn-outline-info"
 									onClick={ () => document.location.replace('/todo/') }
-									>Перейти к спискам дел</button>
+									>Перейти к спискам дел</button> */}
 							</div>
 						</>
 					}
@@ -209,11 +214,11 @@ function User() {
 							</div>
 						</div>
 						<div className='mt-4' style={{fontSize: '0.9rem'}}>
-							<p>
+							{/* <p>
 								Добавьте эту страницу в закладки (нажмите сочетание клавиш Ctrl + D), чтобы не потерять ваши записки.
-							</p>
+							</p> */}
 							<p>
-								Вы так же можете скопировать и отправить ссылку на другие свои устройства, для этого нажмите кнопку "Скопировать ссылку на профиль".
+								Вы так же можете скопировать и отправить ссылку на другие свои устройства, для этого нажмите кнопку "Скопировать ссылку".
 								Или просто сохраните эту ссылку.
 							</p>
 							<p>
