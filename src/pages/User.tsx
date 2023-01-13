@@ -2,11 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getUid, getToken, createUser, getUser } from '../use/getUser';
 
-//import { NotFoundError } from '../use/errors';
 import Modal from '../components/Modal';
-//import apiPoints from '../use/apiPoints';
 import { IUser } from '../use/models';
-
+import { useUserContext } from '../use/UserContext';
 
 /**
  * Страница Просмотр содержимого списка
@@ -40,6 +38,8 @@ function User() {
 	//текущий пользователь
 	const [currentUser, setCurrentUser] = useState({} as IUser);
 	
+    const {setUid} = useUserContext();
+
 	useEffect(()=>{
 		//Если пользователь переносит свой акк
 		if ((uid && token))
@@ -52,6 +52,7 @@ function User() {
 					setCurrentUser(user);
 					setCurrentUid(user.id);
 					setCurrentToken(user.hash as string);
+                    setUid(user.id);
 
 					//Todo загрузка списков
 					// Store.init()
@@ -76,7 +77,7 @@ function User() {
 				});
 		}
 
-	}, [currentUid, currentToken, uid, token]);
+	}, [currentUid, currentToken, uid, token, setUid]); // linter: setUid ??
 	
 
 	/**
@@ -101,6 +102,7 @@ function User() {
 				setCurrentUid(createdUser.id);
 				setCurrentToken(createdUser.hash as string);
 				setCreateUserModal(false);
+                setUid(createdUser.id);
 				navigate(
 					`/user/:id/:hash`.replace(':id', String(createdUser.id)).replace(':hash', String(createdUser.hash))
 					);
