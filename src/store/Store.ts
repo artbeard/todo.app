@@ -23,13 +23,7 @@ class Store{
 	async init()
 	{
 		return fetch(apiPoints.todoList)
-			.then(response => {
-                // if (response.status >= 200 && response.status < 300)
-                // {
-                    return  response.json()
-                // }
-                // return Promise.resolve([]);
-            })
+			.then(response => response.json())
 			.then((data:IToDoList[]) => {
 				runInAction(()=>{
 					this.setTodoList(data);
@@ -104,16 +98,15 @@ class Store{
 	 */
 	async createNewList(title: string): Promise<IToDoList>
 	{	
-		return new Promise((resolve, reject) => {
-			let uid = getUid();
-			let newEl:IToDoList = {
-				id: null,
-				title: title,
-				userId: uid as number,
-				isActive: true,
-				items: []
-			};
-			fetch(apiPoints.todoList, {
+		let uid = getUid();
+		let newEl:IToDoList = {
+			id: null,
+			title: title,
+			userId: uid as number,
+			isActive: true,
+			items: []
+		};
+		return fetch(apiPoints.todoList, {
 				method: 'POST',
 				headers: {
 				  'Content-Type': 'application/json;charset=utf-8'
@@ -123,23 +116,15 @@ class Store{
 			.then(response => response.json())
 			.then(data => {
 				newEl.id = data.id;
-
 				runInAction(()=>{
-				 	//List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
 					this.todoList.push(newEl);
 				})
-				// this.addTodoList(newEl);
-				// resolve(
-				// 	this.getTodoListById(newEl.id) as IToDoList
-				// );
-				
-				resolve(newEl);
+				return newEl;
 			})
 			.catch((err)=>{
 				console.log('Ошибка Создания списка', err)
-				reject(false);
+				throw new Error('Ошибка создания списка дел');
 			});
-		})
 	}
 
 	/**
@@ -149,8 +134,7 @@ class Store{
 	 */
 	async removeList(id: number): Promise<boolean>
 	{
-//		return new Promise((resolve, reject) => {
-        return fetch(apiPoints.editTodoList.replace(':list_id', String(id)), {
+		return fetch(apiPoints.editTodoList.replace(':list_id', String(id)), {
 				method: 'DELETE',
 				headers: {
 				  'Content-Type': 'application/json;charset=utf-8'
@@ -161,23 +145,19 @@ class Store{
 				if (index > -1)
 				{
 					runInAction(()=>{
-                        this.todoList.splice(index, 1);
-				    });
-					//resolve(true);
-                    return true;
+						this.todoList.splice(index, 1);
+					});
+					return true;
 				}
 				else
 				{
-					//reject(false);
-                    return false;
+					return false;
 				}
 			})
 			.catch((err)=>{
 				console.log('Ошибка Создания списка', err)
-				//reject(false);
-                return false;
+				return false;
 			});
-//		})
 	}
 
 	/**
@@ -186,18 +166,33 @@ class Store{
 	 * @param title string
 	 * @returns Promise<IToDoList>
 	 */
-	async changeListTilte(id: number, title: string): Promise<IToDoList>
+	async changeListTilte(id: number, title: string): Promise<boolean>
 	{
-		return new Promise((resolve, reject) => {
-			setTimeout(()=>{
-                console.log('НЕ РЕАЛИЗОВАНО!!!');
+		return fetch(apiPoints.editTodoList.replace(':list_id', String(id)), {
+			method: 'PATCH',
+			headers: {
+			  'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({title: title})
+		})
+		.then(response => {
+			if (response.status === 204)
+			{
 				runInAction(()=>{
 					let changingToDo: IToDoList = this.getTodoListById(id) as IToDoList;
 					changingToDo.title = title;
-					resolve(changingToDo);
-				});
-			}, 1500 );
+				})
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		})
+		.catch((err)=>{
+			console.log('Ошибка Создания списка', err)
+			return false;
+		});
 	}
 
 
@@ -214,23 +209,22 @@ class Store{
 		item.position = todo.items.reduce((acc: number, el: IToDo):number => { return el.position > acc ? el.position : acc }, 0) + 10;
 		
 		return fetch(apiPoints.addTodoItem.replace(':list_id', String(todoId)), {
-				method: 'POST',
-				headers: {
-				  'Content-Type': 'application/json;charset=utf-8'
-				},
-				body: JSON.stringify(item)
-		  	})
-			.then(response => response.json())
-			.then((data:{id: number}) => {
-				console.log('Результат', data);
-				item.id = data.id;
-				runInAction(()=>{
-					todo?.items.push(item)
-				});
-			})
-			.catch((err)=>{
-				console.log('Ошибка добавления', err)
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify(item)
+	  	})
+		.then(response => response.json())
+		.then((data:{id: number}) => {
+			item.id = data.id;
+			runInAction(()=>{
+				todo?.items.push(item)
 			});
+		})
+		.catch((err)=>{
+			console.log('Ошибка добавления', err)
+		});
 	}
 
 	/**
@@ -244,32 +238,30 @@ class Store{
 		let todo = this.getTodoListById(todoId) as IToDoList;
 		let index = todo.items.findIndex((el: IToDo) => el.id === item.id);
 		
-		return new Promise((resolve, reject) => {
-			fetch(apiPoints.editTodoItem.replace(':item_id', String(item.id)), {
-				method: 'PUT',
-				headers: {
-				  'Content-Type': 'application/json;charset=utf-8'
-				},
-				body: JSON.stringify({content: item.content})
-			})
-			.then(response => {
-				if (response.status === 200)
-				{
-					runInAction(()=>{
-						todo.items[index] = item;
-					});
-					resolve(true);
-				}
-				else
-				{
-					reject(false);
-				}
-			})
-			.catch((err)=>{
-				console.log('Ошибка изменения контента', err)
-				reject(false);
-			});
+		return fetch(apiPoints.editTodoItem.replace(':item_id', String(item.id)), {
+			method: 'PATCH',
+			headers: {
+			  'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({content: item.content})
 		})
+		.then(response => {
+			if (response.status === 204)
+			{
+				runInAction(()=>{
+					todo.items[index] = item;
+				});
+				return true;
+			}
+			else
+			{
+				return false
+			}
+		})
+		.catch((err)=>{
+			console.log('Ошибка изменения контента', err)
+			return false;
+		});
 	}
 
 	/**
@@ -292,7 +284,7 @@ class Store{
 				body: JSON.stringify({completed: completed})
 			})
 			.then(response => {
-				if (response.status === 200)
+				if (response.status === 204)
 				{
 					resolve(true);
 				}
@@ -325,31 +317,29 @@ class Store{
 	async removeTodoItem(item: IToDo, listId: number | null): Promise<boolean>
 	{
 		let List = this.getTodoListById(listId) as IToDoList;
-		return new Promise((resolve, reject) => {
-			fetch(apiPoints.editTodoItem.replace(':item_id', String(item.id)), {
-				method: 'DELETE',
-				headers: {
-				  'Content-Type': 'application/json;charset=utf-8'
-				},
-			})
-			.then(response => {
-				if (response.status === 200)
-				{
-					runInAction(()=>{
-						List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
-					})
-					resolve(true);
-				}
-				else
-				{
-					reject(false);
-				}
-			})
-			.catch((err)=>{
-				console.log('Ошибка set completed', err)
-				reject(false);
-			});
+		return fetch(apiPoints.editTodoItem.replace(':item_id', String(item.id)), {
+			method: 'DELETE',
+			headers: {
+			  'Content-Type': 'application/json;charset=utf-8'
+			},
 		})
+		.then(response => {
+			if (response.status === 204)
+			{
+				runInAction(()=>{
+					List.items = List.items.filter((el:IToDo) => !(el.id === item.id))
+				})
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		})
+		.catch((err)=>{
+			console.log('Ошибка set completed', err)
+			return false;
+		});
 	}
 	
 }
