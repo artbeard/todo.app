@@ -20,7 +20,8 @@
     "web-vitals": "^2.1.4"
   },
   
-  "proxy": "http://check-list.loc:80",
+  "proxy": "http://todo.artbeard.loc:80",
+  "homepage": "https://todo.artbeard.loc/todo",
 
   "scripts": {
     "start": "react-scripts start",
